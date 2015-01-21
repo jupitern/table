@@ -13,7 +13,7 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 }
 
 ## Usage
-todo...
+todo
 
 ## Examples
-todo...
+todo
