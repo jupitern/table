@@ -1,0 +1,27 @@
+{
+    "name"       : "jupitern/datatables",
+    "description": "agnostic framework wrapper for datatables",
+    "keywords"   : ["datatables", "framework", "data", "ORM", "dataTable", "jQuery", "UI"],
+    "homepage"   : "https://github.com/jupitern/datatables",
+    "license"    : "MIT",
+    "authors"    : [
+        {
+            "name"    : "Nuno Chaves",
+            "email"   : "nuno.chaves@sapo.pt",
+            "role"    : "Developer"
+        }
+    ],
+    "require"    :{
+        "php":">=5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jupitern\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+
+        }
+    }
+}
