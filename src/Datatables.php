@@ -51,7 +51,7 @@ class Datatables {
 		return $column;
 	}
 
-	public function render()
+	public function render($returnOutput = false)
 	{
 		$instanceName = str_replace(' ', '', $this->instanceName);
 		$html = '<table id="'.$instanceName.'" {attrs} style="{css}"><thead><tr>{thead}</tr>{theadFilters}</thead><tbody>{tbody}</tbody></table>';
@@ -91,10 +91,12 @@ class Datatables {
 			}
 			$tbody .= '</tr>';
 		}
-		return str_replace(
+		$output = str_replace(
 			['{attrs}', '{css}', '{thead}', '{tbody}', '{theadFilters}'],
 			[$attrs, $css, $thead, $tbody, $theadFilters],
 			$html
 		);
+		if ($returnOutput) return $output;
+		echo $output;
 	}
 }

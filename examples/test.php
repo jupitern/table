@@ -29,19 +29,17 @@
 			require('autoload.php');
 
 			try {
-				$db = new PDO('mysql:host=;dbname=;charset=utf8', '', '',
+				$db = new PDO('mysql:host=DB_HOST;dbname=DB_NAME;charset=utf8', 'DB_USERNAME', 'DB_PASSWORD',
 						array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
 				);
-
-				$data = $db->query("SELECT * FROM countries")->fetchAll(PDO::FETCH_OBJ);
-
+				$data = $db->query("SELECT * FROM countries limit 20")->fetchAll(PDO::FETCH_OBJ);
 				$filterData = $db->query("SELECT country as val, country FROM countries limit 10")->fetchAll(PDO::FETCH_OBJ);
 			}
 			catch (PDOException $e) {
 				echo 'Connection failed: ' . $e->getMessage();
 			}
 
-			echo \Jupitern\Datatables\Datatables::instance('dt_example')
+			\Jupitern\Datatables\Datatables::instance('dt_example')
 					->setData($data)
 					->attr('class', 'table table-bordered table-striped table-hover')
 					->attr('cellspacing', '0')
