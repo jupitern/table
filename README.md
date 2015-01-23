@@ -2,9 +2,9 @@
 
 # datatables
 
-agnostic framework wrapper for datatables (tested with v1.10.4)
-can be used for simple table generation without datatables
-can be easily integrated with any framework orm
+ - agnostic framework wrapper for datatables (tested with v1.10.4)
+ - can be used for simple table generation without datatables
+ - can be easily integrated with any framework orm
 
 ## Demo:
 
