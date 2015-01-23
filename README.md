@@ -28,7 +28,7 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 ## Usage
 ```php
 // instance Datatables with instance name
-echo \Jupitern\Datatables\Datatables::instance('dt_example')
+\Jupitern\Datatables\Datatables::instance('dt_example')
 
 // set data for non ajax requests
 // $data is a collection of anonymous objects fetched using PDO (shown in example bellow)
