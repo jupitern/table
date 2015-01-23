@@ -1,6 +1,14 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jupitern/datatables/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jupitern/datatables/?branch=master)
+
 # datatables
 
-agnostic framework wrapper for datatables
+agnostic framework wrapper for datatables (tested with v1.10.4)
+can be used for simple table generation without datatables
+can be easily integrated with any framework orm
+
+## Demo:
+
+http://nunochaves.com/dev/datatables/examples/test.php
 
 ## Requirements
 
@@ -18,16 +26,21 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 ```
 
 ## Usage
-````
+```php
 // instance Datatables with instance name
 echo \Jupitern\Datatables\Datatables::instance('dt_example')
 
 // set data for non ajax requests
+// $data is a collection of anonymous objects fetched using PDO (shown in example bellow)
+// but you can use your framework ORM
 ->setData($data)
 
-// add any attribute to the table html tag
+// add attributes to the <table> html tag one by one
 ->attr('class', 'table table-bordered table-striped table-hover')
 ->attr('cellspacing', '0')
+
+// or add all <table> attributes at once
+->attrs(['class' => 'table table-bordered', 'cellspacing' => '0']);
 
 // add a column in one line
 ->column('Column Title')->value('db_column_name')->add()
@@ -35,9 +48,13 @@ echo \Jupitern\Datatables\Datatables::instance('dt_example')
 // add a column with text field as filter
 ->column('Column Title')->value('db_column_name')->filter()->add()
 
-// add a column with a drop down as filter
-// data must be a collection of objects as shown in example bellow
-->column('Column Title')->value('db_column_name')->filter($data)->add()
+// add a column with a drop down field as filter
+// $data is a collection of anonymous objects fetched using PDO (shown in example bellow)
+// but you can use your framework ORM to retrieve data
+->column('Column Title')
+	->filter($filterData)
+	->value('db_column_name')
+->add()
 
 // add a column with a closure for value field to process data in execution
 // row represents a row object of the data collection
@@ -47,12 +64,31 @@ echo \Jupitern\Datatables\Datatables::instance('dt_example')
 	})
 ->add()
 
-// css for row field and header
+// css for row field and column header
 ->column('Column Title')
 	->value('db_column_name')
-	->css('color', 'red')		// add css to field <td>
-	->css('width', '20%', true)	// add css to field <th>
+	->css('background-color', '#BCC6CC', true)	// add css to field <th>
+	->css('width', '20%', true)					// add css to field <th>
+	->css('color', 'red')						// add css to field <td>
 ->add()
+
+// add a column with row actions and no header
+->column('')->value(function ($row) {
+	return '<a href="country/'.$row->db_column_name.'">edit</a>';
+})
+
+// add datatables js init param
+->jsParam('paging', 'false')
+
+// add all datatables js init params in one line
+// example: disallow order in actions column and set paging to false
+->jsParams([
+	'columnDefs' => '[{ "targets": 3, "orderable": false }]',
+	'paging' => 'false'
+])
+
+// output only html table. dont output any js.
+->disableJs()
 
 // echo table output
 ->render();
@@ -60,11 +96,11 @@ echo \Jupitern\Datatables\Datatables::instance('dt_example')
 // OR return table output
 ->render(true);
 
-````
+```
 
 
 ## Examples
-````
+```php
 // grab data from db with PDO or in alternative from your framework ORM
 $db = new PDO('mysql:host=HOST_NAME;dbname=DB_NAME;charset=utf8', 'DB_USERNAME', 'DB_PASSWORD',
 		array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
@@ -77,6 +113,7 @@ $filterData = $db->query("SELECT country as val, country FROM countries limit 10
 
 \Jupitern\Datatables\Datatables::instance('dt_example')
 	->setData($data)
+	->jsParam('columnDefs', '[{ "targets": 3, "orderable": false }]')
 	->attr('class', 'table table-bordered table-striped table-hover')
 	->attr('cellspacing', '0')
 	->attr('width', '100%')
@@ -109,44 +146,31 @@ $filterData = $db->query("SELECT country as val, country FROM countries limit 10
 	->render();
 ?>
 
-<script type="text/javascript">
-
-$(document).ready(function() {
-
-	// init datatables
-	var dt_example = $("#dt_example").DataTable({
-		orderCellsTop: true,
-		"sDom": '<"top">rt<"bottom"ip><"clear">',
-		"columnDefs": [ { "targets": 3, "orderable": false } ]
-	});
-
-	// aply search to input and select fields
-	$("#dt_example thead input, #dt_example thead select").on( 'blur change', function () {
-		dt_example
-			.column( $(this).parent().index()+':visible' )
-			.search( this.value )
-			.draw();
-	});
-
-});
-
-</script>
-
 Jquery, Datatables should be included. Bootstrap is optional
 
 <!-- JQUERY -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 
-<!-- BOOTSTRAP -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-
 <!-- DATATABLES -->
-<link href="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
 <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+
 <!-- include Datatables Original css -->
 <link href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" rel="stylesheet">
-<!-- or include Datatables Bootstrap css -->
+
+<!-- OR include Bootstrap and Datatables Bootstrap theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<link href="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
 <script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 
-````
+```
+
+## Roadmap
+
+ - [ ] code documentation
+ - [ ] process and retrieve remote data requests
+ - [ ] code some tests
+
+## Contributing
+
+ - welcome to discuss a features, bugs and ideas.

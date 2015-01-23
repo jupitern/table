@@ -16,6 +16,10 @@
 	<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
 	<script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 
+	<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+
+	<style type="text/css"> a { text-decoration: none; } </style>
+
 </head>
 <body>
 
@@ -23,24 +27,38 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-xs-12">
+			<h2>PHP datatables</h2>
+			<b>github:</b> <a href="https://github.com/jupitern/datatables">https://github.com/jupitern/datatables</a> <br/><br/>
+			<p>
+			agnostic framework wrapper for datatables (tested with v1.10.4) <br/>
+			can be used for simple table generation without datatables <br/>
+			can be easily integrated with any framework orm <br/>
+			</p>
+			<p>
+				<a href="https://github.com/jupitern/datatables#datatables">Read Documentation</a>
+			</p>
+			<p><b>Author:</b> <a href="http://nunochaves.com">Nuno Chaves (JupiterN)</a></p>
+		</div>
+	</div>
+	<br/><br/>
+	<div class="row">
+		<div class="col-md-5 col-xs-12">
 
+			<h3>Datatables example:</h3>
 			<?php
 			require('autoload.php');
 
 			try {
-				$db = new PDO('mysql:host=DB_HOST;dbname=DB_NAME;charset=utf8', 'DB_USERNAME', 'DB_PASSWORD',
-						array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+				$db = new PDO('mysql:host=HOST_NAME;dbname=DB_NAME;charset=utf8', 'DB_USERNAME', 'DB_PASSWORD',
+					array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
 				);
 				$data = $db->query("SELECT * FROM countries limit 20")->fetchAll(PDO::FETCH_OBJ);
 				$filterData = $db->query("SELECT country as val, country FROM countries limit 10")->fetchAll(PDO::FETCH_OBJ);
-			}
-			catch (PDOException $e) {
-				echo 'Connection failed: ' . $e->getMessage();
-			}
 
-			\Jupitern\Datatables\Datatables::instance('dt_example')
+				\Jupitern\Datatables\Datatables::instance('dt_example')
 					->setData($data)
+					->jsParam('columnDefs', '[{ "targets": 3, "orderable": false }]')
 					->attr('class', 'table table-bordered table-striped table-hover')
 					->attr('cellspacing', '0')
 					->attr('width', '100%')
@@ -49,52 +67,162 @@
 							return rand(1,10)%2 ? '<b>'.$row->country.'</b>' : $row->country;
 						})
 						->filter($filterData)
-						->css('color', 'green')
+						->css('color', '#888')
 						->css('width', '50%')
-						->css('background-color', '#ccc', true)
+						->css('background-color', '#efefef')
+						->css('background-color', '#f5f5f5', true)
 					->add()
 					->column('Country Code')
 						->filter()
 						->value('countryCode')
-						->css('color', 'red')
+						->css('color', '#778899')
 						->css('width', '20%')
 					->add()
 					->column('Phone Code')
 						->filter()
 						->value('phoneCode')
-						->css('color', 'red')
+						->css('color', '#DEB887')
+						->css('width', '20%')
+					->add()
+						->column('')->value(function ($row) {
+							return '<a href="country/'.$row->idCountry.'">edit</a>';
+						})
+						->css('width', '10%')
+					->add()
+					->render();
+			}
+			catch (PDOException $e) {
+				echo 'Error: ' . $e->getMessage();
+			}
+			?>
+
+		</div>
+		<div class="col-md-7">
+			<br/><br/>
+			<pre class="prettyprint">
+
+\Jupitern\Datatables\Datatables::instance('dt_example')
+	->setData($data)
+	->jsParam('columnDefs', '[{ "targets": 3, "orderable": false }]')
+	->attr('class', 'table table-bordered table-striped table-hover')
+	->attr('cellspacing', '0')
+	->attr('width', '100%')
+	->column('Country')
+		->value(function ($row) {
+			return rand(1,10)%2 ? '<b>'.$row->country.'</b>' : $row->country;
+		})
+		->filter($filterData)
+		->css('color', '#888')
+		->css('width', '50%')
+		->css('background-color', '#efefef')
+		->css('background-color', '#f5f5f5', true)
+	->add()
+	->column('Country Code')
+		->filter()
+		->value('countryCode')
+		->css('color', '#778899')
+		->css('width', '20%')
+	->add()
+	->column('Phone Code')
+		->filter()
+		->value('phoneCode')
+		->css('color', '#DEB887')
+		->css('width', '20%')
+	->add()
+		->column('')->value(function ($row) {
+			return '<a href="country/'.$row->idCountry.'">edit</a>';
+		})
+		->css('width', '10%')
+	->add()
+	->render();
+
+			</pre>
+		</div>
+	</div>
+	<br/><br/>
+	<div class="row">
+		<div class="col-md-5 col-xs-12">
+
+			<h3>Simple table example:</h3>
+			<?php
+
+			try {
+				$data = $db->query("SELECT * FROM countries limit 12")->fetchAll(PDO::FETCH_OBJ);
+
+				\Jupitern\Datatables\Datatables::instance('dt_example2')
+					->setData($data)
+					->attr('class', 'table table-bordered table-striped table-hover')
+					->attr('cellspacing', '0')
+					->attr('width', '100%')
+					->column('Country')
+						->value(function ($row) {
+							return rand(1,10)%2 ? '<b>'.$row->country.'</b>' : $row->country;
+						})
+						->css('color', '#888')
+						->css('width', '50%')
+						->css('background-color', '#efefef')
+						->css('background-color', '#f5f5f5', true)
+					->add()
+						->column('Country Code')
+						->value('countryCode')
+						->css('color', '#778899')
+						->css('width', '20%')
+					->add()
+					->column('Phone Code')
+						->value('phoneCode')
+						->css('color', '#DEB887')
 						->css('width', '20%')
 					->add()
 					->column('')->value(function ($row) {
 						return '<a href="country/'.$row->idCountry.'">edit</a>';
 					})
-					->css('width', '10%')
+						->css('width', '10%')
 					->add()
+					->disableJs()
 					->render();
+			}
+			catch (PDOException $e) {
+				echo 'Connection failed: ' . $e->getMessage();
+			}
 			?>
 
-			<script type="text/javascript">
+		</div>
+		<div class="col-md-7">
+			<br/><br/>
+			<pre class="prettyprint">
 
-				$(document).ready(function() {
-
-					var dt_example = $("#dt_example").DataTable({
-						orderCellsTop: true,
-						"sDom": '<"top">rt<"bottom"ip><"clear">',
-						"columnDefs": [ { "targets": 3, "orderable": false } ]
-					});
-
-					// aply search to input and select fields
-					$("#dt_example thead input, #dt_example thead select").on( 'blur change', function () {
-						dt_example
-							.column( $(this).parent().index()+':visible' )
-							.search( this.value )
-							.draw();
-					});
-
-				});
-
-			</script>
-
+\Jupitern\Datatables\Datatables::instance('dt_example2')
+	->setData($data)
+	->attr('class', 'table table-bordered table-striped table-hover')
+	->attr('cellspacing', '0')
+	->attr('width', '100%')
+	->column('Country')
+		->value(function ($row) {
+			return rand(1,10)%2 ? '<b>'.$row->country.'</b>' : $row->country;
+		})
+		->css('color', '#888')
+		->css('width', '50%')
+		->css('background-color', '#efefef')
+		->css('background-color', '#f5f5f5', true)
+	->add()
+	->column('Country Code')
+		->value('countryCode')
+		->css('color', '#778899')
+		->css('width', '20%')
+	->add()
+	->column('Phone Code')
+		->value('phoneCode')
+		->css('color', '#DEB887')
+		->css('width', '20%')
+	->add()
+	->column('')->value(function ($row) {
+		return '<a href="country/'.$row->idCountry.'">edit</a>';
+	})
+		->css('width', '10%')
+	->add()
+	->disableJs()
+	->render();
+			</pre>
 		</div>
 	</div>
 </div>
