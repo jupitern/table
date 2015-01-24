@@ -47,7 +47,7 @@
 
 			<h3>Datatables example:</h3>
 			<?php
-			require('autoload.php');
+			require('../vendor/autoload.php');
 
 			try {
 				$db = new PDO('mysql:host=HOST_NAME;dbname=DB_NAME;charset=utf8', 'DB_USERNAME', 'DB_PASSWORD',

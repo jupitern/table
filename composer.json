@@ -11,6 +11,10 @@
             "role"    : "Developer"
         }
     ],
+    "support": {
+        "source": "https://github.com/jupitern/datatables",
+        "issues": "https://github.com/jupitern/datatables/issues"
+    },
     "require"    :{
         "php":">=5.3"
     },
