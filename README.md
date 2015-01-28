@@ -221,6 +221,6 @@ Jquery, Datatables should be included. Bootstrap is optional
 
 ## License
 
-DataTables is release under the [MIT license](//datatables.net/license).
+DataTables is release under the MIT license.
 
 You are free to use, modify and distribute this software, as long as the copyright header is left intact
