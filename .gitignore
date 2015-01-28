@@ -9,4 +9,7 @@ Thumbs.db
 *.tmproj
 build
 .idea
+composer.phar
 nbproject/
+vendor/
+examples/db.php

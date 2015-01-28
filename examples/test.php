@@ -47,10 +47,11 @@
 
 			<h3>Datatables example:</h3>
 			<?php
+			require('db.php');
 			require('../vendor/autoload.php');
 
 			try {
-				$db = new PDO('mysql:host=HOST_NAME;dbname=DB_NAME;charset=utf8', 'DB_USERNAME', 'DB_PASSWORD',
+				$db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME.';charset=utf8', DB_USER, DB_PASS,
 					array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
 				);
 				$data = $db->query("SELECT * FROM countries limit 20")->fetchAll(PDO::FETCH_OBJ);
@@ -74,18 +75,18 @@
 					->add()
 					->column('Country Code')
 						->filter()
-						->value('countryCode')
+						->value('country_code')
 						->css('color', '#778899')
 						->css('width', '20%')
 					->add()
 					->column('Phone Code')
 						->filter()
-						->value('phoneCode')
+						->value('phone_code')
 						->css('color', '#DEB887')
 						->css('width', '20%')
 					->add()
 						->column('')->value(function ($row) {
-							return '<a href="country/'.$row->idCountry.'">edit</a>';
+							return '<a href="country/'.$row->id.'">edit</a>';
 						})
 						->css('width', '10%')
 					->add()
@@ -109,7 +110,7 @@
 	->attr('width', '100%')
 	->column('Country')
 		->value(function ($row) {
-			return rand(1,10)%2 ? '<b>'.$row->country.'</b>' : $row->country;
+			return rand(1,10)%2 ? '&lt;b&gt;'.$row->country.'&lt;/b&gt;' : $row->country;
 		})
 		->filter($filterData)
 		->css('color', '#888')
@@ -147,34 +148,32 @@
 			<?php
 
 			try {
-				$data = $db->query("SELECT * FROM countries limit 12")->fetchAll(PDO::FETCH_OBJ);
-
 				\Jupitern\Datatables\Datatables::instance('dt_example2')
-					->setData($data)
+					->setData([
+						['country' => 'Portugal', 'country_code' => '351', 'phone_code' => '351']
+					])
 					->attr('class', 'table table-bordered table-striped table-hover')
 					->attr('cellspacing', '0')
 					->attr('width', '100%')
 					->column('Country')
-						->value(function ($row) {
-							return rand(1,10)%2 ? '<b>'.$row->country.'</b>' : $row->country;
-						})
+						->value('country')
 						->css('color', '#888')
 						->css('width', '50%')
 						->css('background-color', '#efefef')
 						->css('background-color', '#f5f5f5', true)
 					->add()
-						->column('Country Code')
-						->value('countryCode')
+					->column('Country Code')
+						->value('country_code')
 						->css('color', '#778899')
 						->css('width', '20%')
 					->add()
 					->column('Phone Code')
-						->value('phoneCode')
+						->value('phone_code')
 						->css('color', '#DEB887')
 						->css('width', '20%')
 					->add()
 					->column('')->value(function ($row) {
-						return '<a href="country/'.$row->idCountry.'">edit</a>';
+						return '<a href="country/'.$row->id.'">edit</a>';
 					})
 						->css('width', '10%')
 					->add()
@@ -198,7 +197,7 @@
 	->attr('width', '100%')
 	->column('Country')
 		->value(function ($row) {
-			return rand(1,10)%2 ? '<b>'.$row->country.'</b>' : $row->country;
+			return rand(1,10)%2 ? '&lt;b&gt;'.$row->country.'&lt;/b&gt;' : $row->country;
 		})
 		->css('color', '#888')
 		->css('width', '50%')
@@ -225,6 +224,60 @@
 			</pre>
 		</div>
 	</div>
+
+	<br/><br/>
+	<div class="row">
+		<div class="col-md-5 col-xs-12">
+
+			<h3>Remote source example:</h3>
+			<?php
+
+			try {
+				\Jupitern\Datatables\Datatables::instance('dt_example3')
+					->setDataUrl('http://localhost:81/git_repos/datatables/examples/getRemoteData.php')
+					->attr('class', 'table table-bordered table-striped table-hover')
+					->attr('cellspacing', '0')
+					->attr('width', '100%')
+					->column('Country')
+						->value('country')
+						->css('color', 'red')
+						->css('width', '50%')
+						->css('background-color', '#efefef')
+						->css('background-color', '#f5f5f5', true)
+					->add()
+					->column('Country Code')
+						->value('country_code')
+						->css('color', '#778899')
+						->css('width', '20%')
+					->add()
+					->column('Phone Code')
+						->value('phone_code')
+						->css('color', '#DEB887')
+						->css('width', '20%')
+					->add()
+//					->column('')
+//						->value(function ($row) {
+//							return '<a href="country/'.$row->id.'">edit</a>';
+//						})
+//						->css('width', '10%')
+//					->add()
+					->render();
+			}
+			catch (PDOException $e) {
+				echo 'Connection failed: ' . $e->getMessage();
+			}
+			?>
+
+		</div>
+		<div class="col-md-7">
+			<br/><br/>
+			<pre class="prettyprint">
+
+
+			</pre>
+		</div>
+	</div>
+
 </div>
 
 </body>

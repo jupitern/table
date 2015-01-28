@@ -1,18 +1,22 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jupitern/datatables/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jupitern/datatables/?branch=master)
 
-# datatables
+# jupitern/table
 
- - agnostic framework wrapper for datatables (tested with v1.10.4)
- - can be used for simple table generation without datatables
- - can be easily integrated with any framework orm
+Build Html tables using php (objets, arrays)
+Pass your data using:
+	- arrays (associative or not)
+	- object collections (using PDO or you favourite framework ORM)
+Give some power to you tables with your preferred js library:
+	- Datatables (tested with v1.10.4)
+	- more to come...
 
 ## Demo:
 
-http://nunochaves.com/dev/datatables/examples/test.php
+comming soon
 
 ## Requirements
 
-PHP 5.3 or higher.
+PHP 5.4 or higher.
 
 ## Installation
 
@@ -28,11 +32,17 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 ## Usage
 ```php
 // instance Datatables with instance name
-\Jupitern\Datatables\Datatables::instance('dt_example')
+\Jupitern\Table\Table::instance('dt_example')
 
 // set data for non ajax requests
-// $data is a collection of anonymous objects fetched using PDO (shown in example bellow)
-// but you can use your framework ORM
+// using a array
+->setData([ [1, 'Afghanistan', 'AF', '96'], [2, 'Porugal', 'PT', '351'] ])
+// using a associative array
+->setData([
+	['id' => 1, 'country' => 'Afghanistan', 'country_code' => 'AF', 'phone_code' => '96'],
+	['id' => 2, 'country' => 'Porugal', 'country_code' => 'PT', 'phone_code' => '351'],
+])
+// using PDO result or your framework ORM. see example how to grab $data at the end
 ->setData($data)
 
 // add attributes to the <table> html tag one by one
@@ -42,53 +52,78 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 // or add all <table> attributes at once
 ->attrs(['class' => 'table table-bordered', 'cellspacing' => '0']);
 
-// add a column in one line
-->column('Column Title')->value('db_column_name')->add()
+// add a new column for array data
+->column()
+	->title('Country')
+	->value(1)
+->add()
+
+// add a new column for (associtive array, PDO or ORM) data
+->column()
+	->title('Country')
+	->value('country')
+->add()
+
+// add a column with a closure for value field to process data in execution
+// this example assumes data as object
+->column()
+	->title('Country')
+	->value(function ($row) {
+		return rand(1,10)%2 ? '<b>'.$row->country.'</b>' : $row->country;
+	})
+->add()
+
+// onether closure example for adding a column with edit action with no title on <th>
+// this example assumes data associative array
+->column()
+	->value(function ($row) {
+		return '<a href="edit/'.$row['id'].'">edit '.$row['country'].'</a>';
+	})
+->add()
 
 // add a column with text field as filter
-->column('Column Title')->value('db_column_name')->filter()->add()
+->column()
+	->title('Country')
+	->value('country')
+	->filter()
+->add()
 
 // add a column with a drop down field as filter
-// $data is a collection of anonymous objects fetched using PDO (shown in example bellow)
-// but you can use your framework ORM to retrieve data
-->column('Column Title')
+// $filterData as array
+->column()
+	->title('Country')
+	->filter([[1, 'Afghanistan'], [2, 'Porugal']])
+	->value('db_column_name')
+->add()
+
+// add a column with a drop down field as filter
+// $filterData from (associtive array, PDO or ORM). see example how to grab $data at the end
+->column()
+	->title('Country')
 	->filter($filterData)
 	->value('db_column_name')
 ->add()
 
-// add a column with a closure for value field to process data in execution
-// row represents a row object of the data collection
-->column('Column Title')
-	->value(function ($row) {
-		return rand(1,10)%2 ? '<b>'.$row->db_column_name.'</b>' : $row->db_column_name;
-	})
+// add a column with some attributes and css for <th> and <td>
+->column()
+	->title('Country')
+	->value('country')
+	->attr('data-val', 'foo')					// add attributes to <th>
+    ->css('background-color', '#f5f5f5', true)	// add css to <th>
+    ->attr('data-val', 'bar')					// add attributes to <td>
+    ->css('background-color', '#f5f5f5')		// add css to <td>
 ->add()
 
-// css for row field and column header
-->column('Column Title')
-	->value('db_column_name')
-	->css('background-color', '#BCC6CC', true)	// add css to field <th>
-	->css('width', '20%', true)					// add css to field <th>
-	->css('color', 'red')						// add css to field <td>
+// add datatables plugin with some params to your table to
+// get some paging ordering and filtering to work
+->plugin('Datatables')
+	// add this param to grab your data from ajax
+	// this option sets several datatable params at once behind the scenes
+	->ajax('http://localhost:81/git_repos/datatables/examples/getRemoteData.php')
+	// add param disable ordering on actions column
+	// any datatables params can be added using this function
+	->param('columnDefs', '[{ "targets": 3, "orderable": false }]')
 ->add()
-
-// add a column with row actions and no header
-->column('')->value(function ($row) {
-	return '<a href="country/'.$row->db_column_name.'">edit</a>';
-})
-
-// add datatables js init param
-->jsParam('paging', 'false')
-
-// add all datatables js init params in one line
-// example: disallow order in actions column and set paging to false
-->jsParams([
-	'columnDefs' => '[{ "targets": 3, "orderable": false }]',
-	'paging' => 'false'
-])
-
-// output only html table. dont output any js.
-->disableJs()
 
 // echo table output
 ->render();
@@ -106,18 +141,17 @@ $db = new PDO('mysql:host=HOST_NAME;dbname=DB_NAME;charset=utf8', 'DB_USERNAME',
 		array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
 );
 // data to populate table
-$data = $db->query("SELECT * FROM countries")->fetchAll(PDO::FETCH_OBJ);
+$data = $db->query("SELECT id, country, country_code, phone_code FROM countries")->fetchAll(PDO::FETCH_OBJ);
 // used for column filter
 $filterData = $db->query("SELECT country as val, country FROM countries limit 10")->fetchAll(PDO::FETCH_OBJ);
 
-
 \Jupitern\Datatables\Datatables::instance('dt_example')
 	->setData($data)
-	->jsParam('columnDefs', '[{ "targets": 3, "orderable": false }]')
 	->attr('class', 'table table-bordered table-striped table-hover')
 	->attr('cellspacing', '0')
 	->attr('width', '100%')
-	->column('Country')
+	->column()
+		->title('Country')
 		->value(function ($row) {
 			return rand(1,10)%2 ? '<b>'.$row->country.'</b>' : $row->country;
 		})
@@ -126,22 +160,27 @@ $filterData = $db->query("SELECT country as val, country FROM countries limit 10
 		->css('width', '50%')
 		->css('background-color', '#ccc', true)
 	->add()
-	->column('Country Code')
+	->column()
+		->title('Country Code')
+		->value('country_code')
 		->filter()
-		->value('countryCode')
 		->css('color', 'red')
 		->css('width', '20%')
 	->add()
 	->column('Phone Code')
 		->filter()
-		->value('phoneCode')
+		->value('phone_code')
 		->css('color', 'red')
 		->css('width', '20%')
 	->add()
-	->column('')->value(function ($row) {
-		return '<a href="country/'.$row->idCountry.'">edit</a>';
-	})
-	->css('width', '10%')
+	->column()
+		->value(function ($row) {
+			return '<a href="country/'.$row->id.'">edit</a>';
+		})
+		->css('width', '10%')
+	->add()
+	->plugin('Datatables')
+		->param('columnDefs', '[{ "targets": 3, "orderable": false }]')
 	->add()
 	->render();
 ?>
@@ -167,8 +206,9 @@ Jquery, Datatables should be included. Bootstrap is optional
 
 ## Roadmap
 
+ - [ ] more js table plugins
+ - [ ] support for json data
  - [ ] code documentation
- - [ ] process and retrieve remote data requests
  - [ ] code some tests
 
 ## Contributing
