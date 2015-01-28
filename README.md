@@ -1,8 +1,8 @@
 [![Build Status](https://scrutinizer-ci.com/g/jupitern/datatables/badges/build.png?b=master)](https://scrutinizer-ci.com/g/jupitern/datatables/build-status/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jupitern/datatables/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jupitern/datatables/?branch=master)
 
-# jupitern/table - php table generation
-#### simple php table generation with add-ons
+# jupitern/table
+#### simple php table generation. integrates with your favourite js library
 
 Pass your data using:
 * arrays (associative or not).
