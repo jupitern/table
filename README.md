@@ -1,5 +1,5 @@
-[![Build Status](https://scrutinizer-ci.com/g/jupitern/datatables/badges/build.png?b=master)](https://scrutinizer-ci.com/g/jupitern/datatables/build-status/master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jupitern/datatables/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jupitern/datatables/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/jupitern/table/badges/build.png?b=master)](https://scrutinizer-ci.com/g/jupitern/table/build-status/master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jupitern/table/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jupitern/table/?branch=master)
 
 # jupitern/table
 #### simple php table generation. integrates with your favourite js library
