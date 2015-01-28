@@ -5,12 +5,11 @@ Class Datatables extends TablePlugin
 {
 	public function __construct(Table &$tableInstance)
 	{
-		$ret = parent::__construct($tableInstance);
+		parent::__construct($tableInstance);
 		$this->params([
 			'orderCellsTop' => 'true',
 			'sDom' => '\'<"top">rt<"bottom"ip><"clear">\'',
 		]);
-		return $ret;
 	}
 
 	public function ajax($dataUrl)

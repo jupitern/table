@@ -1,14 +1,17 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jupitern/datatables/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jupitern/datatables/?branch=master)
 
-# jupitern/table
+# jupitern/table - php table generation
+#### simple php table generation with add-ons
 
-Build Html tables using php (objets, arrays)
 Pass your data using:
-	- arrays (associative or not)
-	- object collections (using PDO or you favourite framework ORM)
+* arrays (associative or not).
+* result set using PDO or you favourite framework ORM.
+* ajax source.
+
 Give some power to you tables with your preferred js library:
-	- Datatables (tested with v1.10.4)
-	- more to come...
+* Datatables (tested with v1.10.4).
+* more to come...
+* easily extensible to add your custom plugin render
 
 ## Demo:
 
@@ -214,3 +217,9 @@ Jquery, Datatables should be included. Bootstrap is optional
 ## Contributing
 
  - welcome to discuss a features, bugs and ideas.
+
+## License
+
+DataTables is release under the [MIT license](//datatables.net/license).
+
+You are free to use, modify and distribute this software, as long as the copyright header is left intact

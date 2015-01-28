@@ -48,9 +48,9 @@ class Table
 		return $this;
 	}
 
-	public function column($instanceName = null)
+	public function column()
 	{
-		$column = new TableColumn($this, $instanceName);
+		$column = new TableColumn($this);
 		$this->columns[] = $column;
 		return $column;
 	}

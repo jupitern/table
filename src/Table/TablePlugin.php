@@ -10,7 +10,6 @@ Class TablePlugin
 	{
 		$this->tableInstance = $tableInstance;
 		$this->params = new Properties();
-		return $this;
 	}
 
 	public function param($param, $value)

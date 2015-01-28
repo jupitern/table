@@ -25,8 +25,8 @@ try {
 	]);
 }
 catch (PDOException $e) {
-	echo 'Error: '.$e->getMessage().'<br/>'.$query;
+	echo 'Error: '.$e->getMessage().'<br/>';
 }
 catch (Exception $e) {
-	echo 'Error: '.$e->getMessage().'<br/>'.$query;
+	echo 'Error: '.$e->getMessage().'<br/>';
 }
