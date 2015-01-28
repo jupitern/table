@@ -1,3 +1,4 @@
+[![Build Status](https://scrutinizer-ci.com/g/jupitern/datatables/badges/build.png?b=master)](https://scrutinizer-ci.com/g/jupitern/datatables/build-status/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jupitern/datatables/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jupitern/datatables/?branch=master)
 
 # jupitern/table - php table generation
