@@ -2,7 +2,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jupitern/table/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jupitern/table/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/jupitern/datatables/v/stable.svg)](https://packagist.org/packages/jupitern/datatables) [![Total Downloads](https://poser.pugx.org/jupitern/datatables/downloads.svg)](https://packagist.org/packages/jupitern/datatables) [![Latest Unstable Version](https://poser.pugx.org/jupitern/datatables/v/unstable.svg)](https://packagist.org/packages/jupitern/datatables) [![License](https://poser.pugx.org/jupitern/datatables/license.svg)](https://packagist.org/packages/jupitern/datatables)
 # jupitern/table
-#### simple php table generation. integrates with your favourite js library
+#### php table generation. integrates with your favourite orm and js library
 
 Pass your data using:
 * arrays (associative or not).
