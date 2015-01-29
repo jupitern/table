@@ -96,30 +96,30 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 // $filterData as array
 ->column()
 	->title('Country')
+	->value('country')
 	->filter([[1, 'Afghanistan'], [2, 'Porugal']])
-	->value('db_column_name')
 ->add()
 
 // add a column with a drop down field as filter
 // $filterData from (associtive array, PDO or ORM). see example how to grab $data at the end
 ->column()
 	->title('Country')
+	->value('country')
 	->filter($filterData)
-	->value('db_column_name')
 ->add()
 
 // add a column with some attributes and css for <th> and <td>
 ->column()
 	->title('Country')
 	->value('country')
-	->attr('data-val', 'foo')					// add attributes to <th>
+	->attr('data-val', 'foo', true)				// add attributes to <th>
     ->css('background-color', '#f5f5f5', true)	// add css to <th>
     ->attr('data-val', 'bar')					// add attributes to <td>
     ->css('background-color', '#f5f5f5')		// add css to <td>
 ->add()
 
-// add datatables plugin with some params to your table to
-// get some paging ordering and filtering to work
+// add datatables plugin with some params to your table
+// to get some paging ordering and filtering to work
 ->plugin('Datatables')
 	// add this param to grab your data from ajax
 	// this option sets several datatable params at once behind the scenes

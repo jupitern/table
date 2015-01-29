@@ -1,8 +1,8 @@
 {
-    "name"       : "jupitern/datatables",
-    "description": "agnostic framework wrapper for datatables",
-    "keywords"   : ["datatables", "framework", "data", "ORM", "dataTable", "jQuery", "UI"],
-    "homepage"   : "https://github.com/jupitern/datatables",
+    "name"       : "jupitern/table",
+    "description": "php table generation. integrates with your favourite orm and js library",
+    "keywords"   : ["table generation", "framework", "ORM", "dataTables", "jQuery", "UI"],
+    "homepage"   : "https://github.com/jupitern/table",
     "license"    : "MIT",
     "authors"    : [
         {
@@ -12,8 +12,8 @@
         }
     ],
     "support": {
-        "source": "https://github.com/jupitern/datatables",
-        "issues": "https://github.com/jupitern/datatables/issues"
+        "source": "https://github.com/jupitern/table",
+        "issues": "https://github.com/jupitern/table/issues"
     },
     "require"    :{
         "php":">=5.3"
