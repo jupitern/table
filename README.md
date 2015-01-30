@@ -2,7 +2,9 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jupitern/table/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jupitern/table/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/jupitern/table/v/stable.svg)](https://packagist.org/packages/jupitern/table) [![Latest Unstable Version](https://poser.pugx.org/jupitern/table/v/unstable.svg)](https://packagist.org/packages/jupitern/table) [![License](https://poser.pugx.org/jupitern/table/license.svg)](https://packagist.org/packages/jupitern/table)
 # jupitern/table
-#### php table generation. integrates with your favourite orm and js library
+#### PHP table generation.
+#### Serve your data using Arrays, JSON, PDO or your framework ORM directly or by ajax.
+#### Integrate with your favourite js library (datatables or other)
 
 Pass your data using:
 * arrays (associative or not).
@@ -40,12 +42,14 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 
 // set data for non ajax requests
 // using a array
-->setData([ [1, 'Afghanistan', 'AF', '96'], [2, 'Porugal', 'PT', '351'] ])
+->setData([ [1, 'Peter', '35', '961 168 851'], [2, 'John', '44', '169 853 741'] ])
 // using a associative array
 ->setData([
-	['id' => 1, 'country' => 'Afghanistan', 'country_code' => 'AF', 'phone_code' => '96'],
-	['id' => 2, 'country' => 'Porugal', 'country_code' => 'PT', 'phone_code' => '351'],
+	['id' => 1, 'name' => 'Peter', 'age' => '35', 'phone' => '961 168 851'],
+	['id' => 2, 'name' => 'John', 'age' => '44', 'phone' => '169 853 741'],
 ])
+// using json string
+->setData('[[1,"Peter","35","961 168 851"],[2,"John","44","169 853 741"]]')
 // using PDO result or your framework ORM. see example how to grab $data at the end
 ->setData($data)
 
@@ -58,22 +62,22 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 
 // add a new column for array data
 ->column()
-	->title('Country')
+	->title('Name')
 	->value(1)
 ->add()
 
 // add a new column for (associtive array, PDO or ORM) data
 ->column()
-	->title('Country')
-	->value('country')
+	->title('Age')
+	->value('age')
 ->add()
 
 // add a column with a closure for value field to process data in execution
 // this example assumes data as object
 ->column()
-	->title('Country')
+	->title('Name')
 	->value(function ($row) {
-		return rand(1,10)%2 ? '<b>'.$row->country.'</b>' : $row->country;
+		return rand(1,10)%2 ? '<b>'.$row->name.'</b>' : $row->name;
 	})
 ->add()
 
@@ -81,37 +85,37 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 // this example assumes data associative array
 ->column()
 	->value(function ($row) {
-		return '<a href="edit/'.$row['id'].'">edit '.$row['country'].'</a>';
+		return '<a href="edit/'.$row['id'].'">edit '.$row['name'].'</a>';
 	})
 ->add()
 
 // add a column with text field as filter
 ->column()
-	->title('Country')
-	->value('country')
+	->title('Name')
+	->value('name')
 	->filter()
 ->add()
 
 // add a column with a drop down field as filter
 // $filterData as array
 ->column()
-	->title('Country')
-	->value('country')
-	->filter([[1, 'Afghanistan'], [2, 'Porugal']])
+	->title('Name')
+	->value('name')
+	->filter([[1, 'Peter'], [2, 'John']])
 ->add()
 
 // add a column with a drop down field as filter
 // $filterData from (associtive array, PDO or ORM). see example how to grab $data at the end
 ->column()
-	->title('Country')
-	->value('country')
+	->title('Name')
+	->value('name')
 	->filter($filterData)
 ->add()
 
 // add a column with some attributes and css for <th> and <td>
 ->column()
-	->title('Country')
-	->value('country')
+	->title('Name')
+	->value('name')
 	->attr('data-val', 'foo', true)				// add attributes to <th>
     ->css('background-color', '#f5f5f5', true)	// add css to <th>
     ->attr('data-val', 'bar')					// add attributes to <td>
@@ -121,9 +125,9 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 // add datatables plugin with some params to your table
 // to get some paging ordering and filtering to work
 ->plugin('Datatables')
-	// add this param to grab your data from ajax
+	// add this param to grab your data from ajax request
 	// this option sets several datatable params at once behind the scenes
-	->ajax('http://localhost:81/git_repos/datatables/examples/getRemoteData.php')
+	->ajax('http://localhost/getRemoteData.php')
 	// add param disable ordering on actions column
 	// any datatables params can be added using this function
 	->param('columnDefs', '[{ "targets": 3, "orderable": false }]')
@@ -138,26 +142,26 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 ```
 
 
-## Examples
+## Example using PDO and datatables
 ```php
 // grab data from db with PDO or in alternative from your framework ORM
 $db = new PDO('mysql:host=HOST_NAME;dbname=DB_NAME;charset=utf8', 'DB_USERNAME', 'DB_PASSWORD',
 		array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
 );
 // data to populate table
-$data = $db->query("SELECT id, country, country_code, phone_code FROM countries")->fetchAll(PDO::FETCH_OBJ);
+$data = $db->query("SELECT id, name, age, phone FROM persons")->fetchAll(PDO::FETCH_OBJ);
 // used for column filter
-$filterData = $db->query("SELECT country as val, country FROM countries limit 10")->fetchAll(PDO::FETCH_OBJ);
+$filterData = $db->query("SELECT name as val, name FROM persons limit 10")->fetchAll(PDO::FETCH_OBJ);
 
-\Jupitern\Datatables\Datatables::instance('dt_example')
+\Jupitern\Table\Table::instance('dt_example')
 	->setData($data)
 	->attr('class', 'table table-bordered table-striped table-hover')
 	->attr('cellspacing', '0')
 	->attr('width', '100%')
 	->column()
-		->title('Country')
+		->title('Name')
 		->value(function ($row) {
-			return rand(1,10)%2 ? '<b>'.$row->country.'</b>' : $row->country;
+			return rand(1,10)%2 ? '<b>'.$row->name.'</b>' : $row->name;
 		})
 		->filter($filterData)
 		->css('color', 'green')
@@ -165,15 +169,15 @@ $filterData = $db->query("SELECT country as val, country FROM countries limit 10
 		->css('background-color', '#ccc', true)
 	->add()
 	->column()
-		->title('Country Code')
-		->value('country_code')
+		->title('Age')
+		->value('age')
 		->filter()
 		->css('color', 'red')
 		->css('width', '20%')
 	->add()
-	->column('Phone Code')
+	->column('Phone')
 		->filter()
-		->value('phone_code')
+		->value('phone')
 		->css('color', 'red')
 		->css('width', '20%')
 	->add()
@@ -211,16 +215,15 @@ Jquery, Datatables should be included. Bootstrap is optional
 ## Roadmap
 
  - [ ] more js table plugins
- - [ ] support for json data
- - [ ] code documentation
+ - [ ] more examples (including ajax data)
  - [ ] code some tests
 
 ## Contributing
 
- - welcome to discuss a features, bugs and ideas.
+ - welcome to discuss a bugs, features and ideas.
 
 ## License
 
-DataTables is release under the MIT license.
+jupitern/table is release under the MIT license.
 
 You are free to use, modify and distribute this software, as long as the copyright header is left intact

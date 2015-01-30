@@ -11,7 +11,8 @@ try {
 		$orderBy .= $_POST['columns'][$orderField['column']]['data'] .' '. $orderField['dir'] .' ';
 	}
 
-	$query = "SELECT country, country_code, phone_code, 'cenas' as url FROM countries $orderBy limit $start, $length";
+	$query = "SELECT country, country_code, phone_code, 'cenas' as url
+			  FROM countries $orderBy limit $start, $length";
 
 	$db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME.';charset=utf8', DB_USER, DB_PASS,
 		array(PDO::ATTR_EMULATE_PREPARES => false, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)

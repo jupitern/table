@@ -3,6 +3,11 @@ namespace Jupitern\Table;
 
 Class Datatables extends TablePlugin
 {
+	/**
+	 * create instance of datatables plugin
+	 *
+	 * @param Table $tableInstance
+	 */
 	public function __construct(Table &$tableInstance)
 	{
 		parent::__construct($tableInstance);
@@ -12,6 +17,12 @@ Class Datatables extends TablePlugin
 		]);
 	}
 
+	/**
+	 * set datatables to accept data using ajax requests
+	 *
+	 * @param $dataUrl
+	 * @return $this
+	 */
 	public function ajax($dataUrl)
 	{
 		$this->param('processing', 'true');
@@ -25,6 +36,11 @@ Class Datatables extends TablePlugin
 		return $this;
 	}
 
+	/**
+	 * render datatables html
+	 *
+	 * @return mixed
+	 */
 	public function render()
 	{
 		$output = '

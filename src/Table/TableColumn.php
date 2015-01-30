@@ -12,6 +12,11 @@ Class TableColumn
 	private $filter = false;
 	private $filterData = null;
 
+	/**
+	 * create a new TableColumn instance
+	 *
+	 * @param Table $tableInstance
+	 */
 	public function __construct(Table &$tableInstance)
 	{
 		$this->tableInstance = $tableInstance;
@@ -23,42 +28,91 @@ Class TableColumn
 		return $this->$prop;
 	}
 
+	/**
+	 * set column title
+	 *
+	 * @param $title
+	 * @return $this
+	 */
 	public function title($title)
 	{
 		$this->title = $title;
 		return $this;
 	}
 
+	/**
+	 * bind colunm value. $value can be:
+	 * integer index for none associative array or json
+	 * string index for associative array, json, PDO or ORM result
+	 * a closure that returns a string
+	 *
+	 * @param $value
+	 * @return $this
+	 */
 	public function value($value)
 	{
 		$this->value = $value;
 		return $this;
 	}
 
+	/**
+	 * add a attribute to table <td> or <th>
+	 *
+	 * @param $attr
+	 * @param $value
+	 * @param bool $header
+	 * @return $this
+	 */
 	public function attr($attr, $value, $header = false)
 	{
 		$this->attrs[$header ? 'header' : 'body']->add($attr, $value);
 		return $this;
 	}
 
+	/**
+	 * add css to table <td> or <th>
+	 *
+	 * @param $attr
+	 * @param $value
+	 * @param bool $header
+	 * @return $this
+	 */
 	public function css($attr, $value, $header = false)
 	{
 		$this->css[$header ? 'header' : 'body']->add($attr, $value);
 		return $this;
 	}
 
+	/**
+	 * add a filter to this column.
+	 * $data can be array (associative or not), json, PDO or ORM result
+	 *
+	 * @param null $data
+	 * @return $this
+	 */
 	public function filter($data = null)
 	{
+		$this->filterData = $this->isJson($data) ? json_decode($data) : $data;
 		$this->filter = true;
-		$this->filterData = $data;
+		$this->tableInstance->hasFilters = true;
 		return $this;
 	}
 
+	/**
+	 * add this column to the table
+	 *
+	 * @return Table
+	 */
 	public function add()
 	{
 		return $this->tableInstance;
 	}
 
+	/**
+	 * render column header cell <th>
+	 *
+	 * @return mixed
+	 */
 	public function renderHeader()
 	{
 		$template = '<th {attrs} style="{css}">{title}</th>';
@@ -67,9 +121,13 @@ Class TableColumn
 		return str_replace(['{attrs}', '{css}', '{title}'], [$attrs, $css, $this->title], $template);
 	}
 
+	/**
+	 * render column filter
+	 *
+	 * @return string
+	 */
 	public function renderFilter()
 	{
-		if (!$this->filter) return '';
 		$html = '';
 		if ($this->filterData !== null) {
 			$html .= '<select class="form-control input-sm" style="width: 99%"><option value=""></option>';
@@ -87,6 +145,12 @@ Class TableColumn
 		return '<td>'.$html.'</td>';
 	}
 
+	/**
+	 * render column body cell <td>
+	 *
+	 * @param $row
+	 * @return mixed
+	 */
 	public function renderBody( &$row )
 	{
 		$template = '<td {attrs} style="{css}">{val}</td>';
@@ -105,6 +169,14 @@ Class TableColumn
 			$val = $this->value !== null ? $row[$this->value] : '';
 		}
 		return str_replace(['{attrs}','{css}','{title}','{val}'], [$attrs, $css, $this->title, $val], $template);
+	}
+
+
+	private function isJson($string)
+	{
+		if (!is_string($string)) return false;
+		json_decode($string);
+		return (json_last_error() == JSON_ERROR_NONE);
 	}
 
 }
