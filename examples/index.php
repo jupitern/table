@@ -83,7 +83,7 @@ catch (\PDOException $e) {
 								<?php
 								try{
 									\Jupitern\Table\Table::instance('dt_example1')
-										->setData('[[1,"Afghanistan","AF","96"],[2,"Porugal","PT","351"]]')
+										->setData([[1,"Afghanistan","AF","96"],[2,"Porugal","PT","351"]])
 										->attr('class', 'table table-bordered table-striped table-hover')
 										->attr('cellspacing', '0')
 										->attr('width', '100%')
@@ -99,6 +99,7 @@ catch (\PDOException $e) {
 										->column()
 											->title('Country Code')
 											->value(2)
+											->filter()
 											->css('color', '#778899')
 											->css('width', '20%')
 										->add()

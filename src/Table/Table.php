@@ -44,7 +44,18 @@ class Table
 	 */
 	public function setData($data)
 	{
-		$this->data = $this->isJson($data) ? json_decode($data) : $data;
+		if (is_array($data) || is_object($data)) {
+			$this->data = $data;
+		}
+		elseif (is_string($data)) {
+			$this->data = json_decode($data);
+			if (json_last_error() != JSON_ERROR_NONE){
+				throw new \Exception("Invalid json data for method setData");
+			}
+		}
+		else {
+			throw new \Exception("Invalid data type for method setData");
+		}
 		return $this;
 	}
 
@@ -161,14 +172,6 @@ class Table
 		);
 		if ($returnOutput) return $output;
 		echo $output;
-	}
-
-
-	private function isJson($string)
-	{
-		if (!is_string($string)) return false;
-		json_decode($string);
-		return (json_last_error() == JSON_ERROR_NONE);
 	}
 
 }

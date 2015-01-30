@@ -87,12 +87,20 @@ Class TableColumn
 	 * add a filter to this column.
 	 * $data can be array (associative or not), json, PDO or ORM result
 	 *
-	 * @param null $data
+	 * @param $data
 	 * @return $this
 	 */
 	public function filter($data = null)
 	{
-		$this->filterData = $this->isJson($data) ? json_decode($data) : $data;
+		if (is_array($data) || is_object($data)) {
+			$this->filterData = $data;
+		}
+		elseif (is_string($data)) {
+			$this->filterData = json_decode($data);
+			if (json_last_error() != JSON_ERROR_NONE){
+				throw new \Exception("Invalid json data for filter");
+			}
+		}
 		$this->filter = true;
 		$this->tableInstance->hasFilters = true;
 		return $this;
