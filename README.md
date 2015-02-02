@@ -7,9 +7,9 @@
 #### Integrate with your favourite js library (datatables or other)
 
 Pass your data using:
-* arrays (associative or not).
+* JSON, Arrays (associative or not).
 * result set using PDO or you favourite framework ORM.
-* ajax source.
+* directly or using ajax requests.
 
 Give some power to you tables with your preferred js library:
 * Datatables (tested with v1.10.4).
@@ -30,7 +30,7 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 ```javascript
 {
     "require": {
-        "jupitern/datatables": "0.*"
+        "jupitern/table": "0.*"
     }
 }
 ```
