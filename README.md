@@ -3,8 +3,6 @@
 [![Latest Stable Version](https://poser.pugx.org/jupitern/table/v/stable.svg)](https://packagist.org/packages/jupitern/table) [![Latest Unstable Version](https://poser.pugx.org/jupitern/table/v/unstable.svg)](https://packagist.org/packages/jupitern/table) [![License](https://poser.pugx.org/jupitern/table/license.svg)](https://packagist.org/packages/jupitern/table)
 # jupitern/table
 #### PHP table generation.
-#### Serve your data using Arrays, JSON, PDO or your framework ORM directly or by ajax.
-#### Integrate with your favourite js library (datatables or other)
 
 Pass your data using:
 * JSON, Arrays (associative or not).
