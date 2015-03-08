@@ -21,6 +21,8 @@
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/tomorrow-night.min.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
 
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('pre code').each(function(i, block) {
@@ -33,6 +35,7 @@
 	</script>
 
 	<style type="text/css">
+		body{ font-family: 'Open Sans', sans-serif; }
 		a { text-decoration: none; }
 
 	</style>
@@ -51,7 +54,7 @@
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<b>author:</b> <a href="http://nunochaves.com" target="_blank">Nuno Chaves (JupiterN)</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<b>Documentation:</b> <a href="https://github.com/jupitern/table#jupiterntable" target="_blank">here</a> <br/><br/>
+			<b>Documentation:</b> <a href="https://github.com/jupitern/table#usage" target="_blank">here</a> <br/><br/>
 		</div>
 	</div>
 	<br/>
