@@ -16,7 +16,7 @@ Give some power to you tables with your preferred js library:
 
 ## Demo:
 
-comming soon
+[demo here](http://nunochaves.com/dev/table/examples)
 
 ## Requirements
 

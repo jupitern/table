@@ -9,7 +9,7 @@ require 'header.php';
 <div class="container">
 	<div class="row">
 		<div class="col-md-12 col-xs-12">
-			<h4>Simple array example:</h4> <br/>
+			<h4>Associtive array example:</h4> <br/>
 		</div>
 	</div>
 	<div class="row">
@@ -18,15 +18,15 @@ require 'header.php';
 			try{
 				\Jupitern\Table\Table::instance('dt_example1')
 					->setData([
-						[1,"Afghanistan","AF","96"],
-						[2,"Porugal","PT","351"]
+						['id' => 1, 'country' => 'Afghanistan', 'country_code' => 'AF', 'phone_code' => '96'],
+						['id' => 2, 'country' => 'Porugal', 'country_code' => 'PT', 'phone_code' => '351'],
 					])
 					->attr('class', 'table table-bordered table-striped table-hover')
 					->attr('cellspacing', '0')
 					->attr('width', '100%')
 					->column()
 						->title('Country')
-						->value(1)
+						->value('country')
 						->attr('data-val', 'foo')
 						->css('width', '50%')
 						->css('background-color', '#efefef')
@@ -34,19 +34,19 @@ require 'header.php';
 					->add()
 					->column()
 						->title('Country Code')
-						->value(2)
+						->value('country_code')
 						->css('color', '#778899')
 						->css('width', '20%')
 					->add()
 					->column()
 						->title('Phone Code')
-						->value(3)
+						->value('phone_code')
 						->css('color', '#DEB887')
 						->css('width', '20%')
 					->add()
 					->column()
 						->value(function ($row) {
-							return '<a href="#'.$row[0].'">edit</a>';
+							return '<a href="#'.$row['id'].'">edit</a>';
 						})
 						->css('width', '10%')
 					->add()
@@ -60,8 +60,8 @@ require 'header.php';
 		<div class="col-md-7 col-xs-12">
 			<pre><code class="php6" style="font-size: 11.5px;">
 $data = [
-	[1,"Afghanistan","AF","96"],
-	[2,"Porugal","PT","351"]
+	['id' => 1, 'country' => 'Afghanistan', 'country_code' => 'AF', 'phone_code' => '96'],
+	['id' => 2, 'country' => 'Porugal', 'country_code' => 'PT', 'phone_code' => '351'],
 ];
 
 \Jupitern\Table\Table::instance('dt_example1')
@@ -71,7 +71,7 @@ $data = [
 	->attr('width', '100%')
 	->column()
 		->title('Country')
-		->value(1)
+		->value('country')
 		->attr('data-val', 'foo')
 		->css('width', '50%')
 		->css('background-color', '#efefef')
@@ -79,19 +79,19 @@ $data = [
 	->add()
 	->column()
 		->title('Country Code')
-		->value(2)
+		->value('country_code')
 		->css('color', '#778899')
 		->css('width', '20%')
 	->add()
 	->column()
 		->title('Phone Code')
-		->value(3)
+		->value('phone_code')
 		->css('color', '#DEB887')
 		->css('width', '20%')
 	->add()
 	->column()
 		->value(function ($row) {
-			return '&lt;a href="#'.$row[0].'"&gt;edit&lt;/a&gt;';
+			return '&lt;a href="#'.$row['id'].'"&gt;edit&lt;/a&gt;';
 		})
 		->css('width', '10%')
 	->add()
