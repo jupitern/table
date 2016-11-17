@@ -93,23 +93,6 @@ class Table
 	}
 
 	/**
-	 * start a new plugin
-	 *
-	 * @param $pluginClassName
-	 * @return TablePlugin
-	 * @throws \Exception
-	 */
-	public function plugin($pluginClassName)
-	{
-		$pluginClassName = "\Jupitern\Table\\$pluginClassName";
-		$this->tablePlugin = new $pluginClassName($this);
-		if (!$this->tablePlugin instanceof TablePlugin) {
-			throw new \Exception("{$pluginClassName} does not implement TablePlugin.");
-		}
-		return $this->tablePlugin;
-	}
-
-	/**
 	 * generate table html
 	 *
 	 * @param bool $returnOutput
