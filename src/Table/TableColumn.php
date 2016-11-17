@@ -188,16 +188,4 @@ Class TableColumn
 		return (json_last_error() == JSON_ERROR_NONE);
 	}
 
-	/**
-	 * Check if array is associative
-	 *
-	 * @param array $arr
-	 * @return bool
-	 */
-	private function isArrayAssociative(array $arr)
-	{
-		if (array() === $arr) return false;
-		return array_keys($arr) !== range(0, count($arr) - 1);
-	}
-
 }
