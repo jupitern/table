@@ -2,21 +2,18 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jupitern/table/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jupitern/table/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/jupitern/table/v/stable.svg)](https://packagist.org/packages/jupitern/table) [![Latest Unstable Version](https://poser.pugx.org/jupitern/table/v/unstable.svg)](https://packagist.org/packages/jupitern/table) [![License](https://poser.pugx.org/jupitern/table/license.svg)](https://packagist.org/packages/jupitern/table)
 # jupitern/table
-#### PHP table generation.
+#### HTML table generation with PHP.
 
 Pass your data using:
 * JSON, Arrays (associative or not).
 * result set using PDO or you favourite framework ORM.
 * directly or using ajax requests.
-
-Give some power to you tables with your preferred js library:
-* Datatables (tested with v1.10.4).
+* Integrates easily with your preferred js library.
 * more to come...
-* easily extensible to add your custom plugin render
 
 ## Demo:
 
-[demo here](http://nunochaves.com/dev/table/examples)
+soon...
 
 ## Requirements
 
@@ -24,18 +21,18 @@ PHP 5.4 or higher.
 
 ## Installation
 
-Include jupitern/datatables in your project, by adding it to your composer.json file.
+Include jupitern/table in your project, by adding it to your composer.json file.
 ```javascript
 {
     "require": {
-        "jupitern/table": "0.*"
+        "jupitern/table": "1.*"
     }
 }
 ```
 
 ## Usage
 ```php
-// instance Datatables with instance name
+// instance Table with instance name
 \Jupitern\Table\Table::instance('dt_example')
 
 // set data for non ajax requests
@@ -52,6 +49,7 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
 ->setData($data)
 
 // add attributes to the <table> html tag one by one
+->attr('id', 'demoTable')
 ->attr('class', 'table table-bordered table-striped table-hover')
 ->attr('cellspacing', '0')
 
@@ -120,17 +118,6 @@ Include jupitern/datatables in your project, by adding it to your composer.json 
     ->css('background-color', '#f5f5f5')		// add css to <td>
 ->add()
 
-// add datatables plugin with some params to your table
-// to get some paging ordering and filtering to work
-->plugin('Datatables')
-	// add this param to grab your data from ajax request
-	// this option sets several datatable params at once behind the scenes
-	->ajax('http://localhost/getRemoteData.php')
-	// add param disable ordering on actions column
-	// any datatables params can be added using this function
-	->param('columnDefs', '[{ "targets": 3, "orderable": false }]')
-->add()
-
 // echo table output
 ->render();
 
@@ -153,6 +140,7 @@ $filterData = $db->query("SELECT name as val, name FROM persons limit 10")->fetc
 
 \Jupitern\Table\Table::instance('dt_example')
 	->setData($data)
+	->attr('id', 'demoTable')
 	->attr('class', 'table table-bordered table-striped table-hover')
 	->attr('cellspacing', '0')
 	->attr('width', '100%')
@@ -185,35 +173,28 @@ $filterData = $db->query("SELECT name as val, name FROM persons limit 10")->fetc
 		})
 		->css('width', '10%')
 	->add()
-	->plugin('Datatables')
-		->param('columnDefs', '[{ "targets": 3, "orderable": false }]')
-	->add()
 	->render();
 ?>
 
-Jquery, Datatables should be included. Bootstrap is optional
+Jquery and Datatables should be included.
 
 <!-- JQUERY -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
 <!-- DATATABLES -->
-<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<link href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 
-<!-- include Datatables Original css -->
-<link href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" rel="stylesheet">
-
-<!-- OR include Bootstrap and Datatables Bootstrap theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-<link href="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
-<script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<!-- Bootstrap and Datatables Bootstrap theme (OPTIONAL) -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 ```
 
 ## Roadmap
 
- - [ ] more js table plugins
- - [ ] more examples (including ajax data)
+ - [ ] add demo and more examples
  - [ ] code some tests
 
 ## Contributing

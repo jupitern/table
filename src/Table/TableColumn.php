@@ -87,20 +87,12 @@ Class TableColumn
 	 * add a filter to this column.
 	 * $data can be array (associative or not), json, PDO or ORM result
 	 *
-	 * @param $data
+	 * @param null $data
 	 * @return $this
 	 */
 	public function filter($data = null)
 	{
-		if (is_array($data) || is_object($data)) {
-			$this->filterData = $data;
-		}
-		elseif (is_string($data)) {
-			$this->filterData = json_decode($data);
-			if (json_last_error() != JSON_ERROR_NONE){
-				throw new \Exception("Invalid json data for filter");
-			}
-		}
+		$this->filterData = $this->isJson($data) ? json_decode($data) : $data;
 		$this->filter = true;
 		$this->tableInstance->hasFilters = true;
 		return $this;
@@ -139,11 +131,14 @@ Class TableColumn
 		$html = '';
 		if ($this->filterData !== null) {
 			$html .= '<select class="form-control input-sm" style="width: 99%"><option value=""></option>';
-			foreach ($this->filterData as $row) {
-				if (is_object($row)) {
-					$row = array_values(get_object_vars($row));
+			foreach ($this->filterData as $option) {
+				if (is_string($option)) {
+					$option = [$option, $option];
 				}
-				$html .= '<option value="'.$row[0].'">'.$row[1].'</option>';
+				elseif (is_object($option)) {
+					$option = array_values(get_object_vars($option));
+				}
+				$html .= '<option value="'.$option[0].'">'.$option[1].'</option>';
 			}
 			$html .= '</select>';
 		}
@@ -180,11 +175,29 @@ Class TableColumn
 	}
 
 
+	/**
+	 * Check if string if json
+	 *
+	 * @param $string
+	 * @return bool
+	 */
 	private function isJson($string)
 	{
 		if (!is_string($string)) return false;
 		json_decode($string);
 		return (json_last_error() == JSON_ERROR_NONE);
+	}
+
+	/**
+	 * Check if array is associative
+	 *
+	 * @param array $arr
+	 * @return bool
+	 */
+	private function isArrayAssociative(array $arr)
+	{
+		if (array() === $arr) return false;
+		return array_keys($arr) !== range(0, count($arr) - 1);
 	}
 
 }

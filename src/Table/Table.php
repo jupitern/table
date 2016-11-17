@@ -4,7 +4,6 @@ namespace Jupitern\Table;
 class Table
 {
 
-	public $instanceName;
 	public $columns;
 	public $hasFilters;
 
@@ -14,12 +13,8 @@ class Table
 	private $tablePlugin;
 
 
-	/**
-	 * @param $instanceName
-	 */
-	protected function __construct($instanceName)
+	protected function __construct()
 	{
-		$this->instanceName = str_replace(' ', '', $instanceName);
 		$this->css = new Properties();
 		$this->attrs = new Properties();
 		$this->hasFilters = false;
@@ -28,12 +23,11 @@ class Table
 	/**
 	 * Initializes the Table.
 	 *
-	 * @param $instanceName
 	 * @return static
 	 */
-	public static function instance($instanceName)
+	public static function instance()
 	{
-		return new static($instanceName);
+		return new static();
 	}
 
 	/**
@@ -44,18 +38,7 @@ class Table
 	 */
 	public function setData($data)
 	{
-		if (is_array($data) || is_object($data)) {
-			$this->data = $data;
-		}
-		elseif (is_string($data)) {
-			$this->data = json_decode($data);
-			if (json_last_error() != JSON_ERROR_NONE){
-				throw new \Exception("Invalid json data for method setData");
-			}
-		}
-		else {
-			throw new \Exception("Invalid data type for method setData");
-		}
+		$this->data = $this->isJson($data) ? json_decode($data) : $data;
 		return $this;
 	}
 
@@ -134,7 +117,7 @@ class Table
 	 */
 	public function render($returnOutput = false)
 	{
-		$html  = '<table id="{instanceName}" {attrs} {css}><thead><tr>{thead}</tr>{theadFilters}</thead>';
+		$html  = '<table {attrs} {css}><thead><tr>{thead}</tr>{theadFilters}</thead>';
 		$html .= '<tbody>{tbody}</tbody></table>';
 		$html .= "\n\n{plugin}";
 
@@ -162,9 +145,9 @@ class Table
 		$plugin = $this->tablePlugin !== null ? $this->tablePlugin->render() : '';
 
 		$output = str_replace(
-			['{instanceName}','{attrs}','{css}','{thead}','{theadFilters}','{tbody}', '{plugin}'],
+			['{attrs}','{css}','{thead}','{theadFilters}','{tbody}', '{plugin}'],
 			[
-				$this->instanceName, $attrs, $css, $thead,
+				$attrs, $css, $thead,
 				$this->hasFilters ? "<tr>{$theadFilters}</tr>" : "",
 				$tbody, $plugin
 			],
@@ -172,6 +155,14 @@ class Table
 		);
 		if ($returnOutput) return $output;
 		echo $output;
+	}
+
+
+	private function isJson($string)
+	{
+		if (!is_string($string)) return false;
+		json_decode($string);
+		return (json_last_error() == JSON_ERROR_NONE);
 	}
 
 }
