@@ -33,7 +33,7 @@ Include jupitern/table in your project, by adding it to your composer.json file.
 ## Usage
 ```php
 // instance Table with instance name
-\Jupitern\Table\Table::instance('dt_example')
+\Jupitern\Table\Table::instance()
 
 // set data for non ajax requests
 // using a array
@@ -44,7 +44,7 @@ Include jupitern/table in your project, by adding it to your composer.json file.
 	['id' => 2, 'name' => 'John', 'age' => '44', 'phone' => '169 853 741'],
 ])
 // using json string
-->setData('[[1,"Peter","35","961 168 851"],[2,"John","44","169 853 741"]]')
+->setData([[1,"Peter","35","961 168 851"],[2,"John","44","169 853 741"]])
 // using PDO result or your framework ORM. see example how to grab $data at the end
 ->setData($data)
 
@@ -138,7 +138,7 @@ $data = $db->query("SELECT id, name, age, phone FROM persons")->fetchAll(PDO::FE
 // used for column filter
 $filterData = $db->query("SELECT name as val, name FROM persons limit 10")->fetchAll(PDO::FETCH_OBJ);
 
-\Jupitern\Table\Table::instance('dt_example')
+\Jupitern\Table\Table::instance()
 	->setData($data)
 	->attr('id', 'demoTable')
 	->attr('class', 'table table-bordered table-striped table-hover')
@@ -176,7 +176,7 @@ $filterData = $db->query("SELECT name as val, name FROM persons limit 10")->fetc
 	->render();
 ?>
 
-Jquery and Datatables should be included.
+Include Jquery, Datatables and Bootstrap (optional) in your html.
 
 <!-- JQUERY -->
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -189,6 +189,14 @@ Jquery and Datatables should be included.
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		$('#demoTable').DataTable();
+	});
+
+</script>
 
 ```
 

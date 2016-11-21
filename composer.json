@@ -1,7 +1,7 @@
 {
     "name"       : "jupitern/table",
-    "description": "php table generation. integrates with your favourite orm and js library",
-    "keywords"   : ["table generation", "framework", "ORM", "dataTables", "jQuery", "UI"],
+    "description": "HTML table generation for PHP. integrates with your favourite orm and js library",
+    "keywords"   : ["PHP html table generation", "framework", "ORM", "dataTables", "jQuery", "UI"],
     "homepage"   : "https://github.com/jupitern/table",
     "license"    : "MIT",
     "authors"    : [
