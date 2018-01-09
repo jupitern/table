@@ -11,6 +11,7 @@ class Table
 	private $css;
 	private $attrs;
 	private $tablePlugin;
+	public $titlesMode = null;
 
 
 	protected function __construct()
@@ -39,6 +40,22 @@ class Table
 	public function setData($data)
 	{
 		$this->data = $this->isJson($data) ? json_decode($data) : $data;
+		return $this;
+	}
+
+	/**
+	 * set titles auto resolution mode from column name. Options: underscore, camelcase
+	 *
+	 * @param $data
+	 * @return $this
+	 */
+	public function setAutoTitles($titleMode)
+	{
+		if (!in_array(strtolower($titleMode), ['camelcase', 'underscore'])) {
+			throw new \Exception("selected titles mode options not found");
+		}
+
+		$this->titlesMode = strtolower($titleMode);
 		return $this;
 	}
 
@@ -136,8 +153,9 @@ class Table
 			],
 			$html
 		);
-		if ($returnOutput) return $output;
-		echo $output;
+		
+		if (!$returnOutput) echo $output;
+		return $output;
 	}
 
 
