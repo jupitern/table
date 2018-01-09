@@ -115,6 +115,11 @@ Class TableColumn
 	 */
 	public function renderHeader()
 	{
+		if (empty($this->title) && !is_callable($this->value)) {
+			if ($this->tableInstance->titlesMode == 'underscore') $this->title = $this->underscoreToTitle($this->value);
+			elseif ($this->tableInstance->titlesMode == 'camelcase') $this->title = $this->camelToTitle($this->value);
+		}
+
 		$template = '<th {attrs} style="{css}">{title}</th>';
 		$attrs = $this->attrs['header']->render('{prop}="{val}" ');
 		$css = $this->css['header']->render('{prop}:{val}; ');
@@ -187,5 +192,31 @@ Class TableColumn
 		json_decode($string);
 		return (json_last_error() == JSON_ERROR_NONE);
 	}
+
+
+	/**
+	 * @param string $str
+	 * @return mixed
+	 */
+	private function camelToTitle($str)
+	{
+		$intermediate = preg_replace('/(?!^)([[:upper:]][[:lower:]]+)/', ' $0', $str);
+		$titleStr = preg_replace('/(?!^)([[:lower:]])([[:upper:]])/', '$1 $2', $intermediate);
+
+		return $titleStr;
+	}
+
+
+	/**
+	 * @param string $str
+	 * @return string
+	 */
+	private function underscoreToTitle($str)
+	{
+		$str = ucwords(str_replace("_", " ", $str));
+
+		return $str;
+	}
+
 
 }
