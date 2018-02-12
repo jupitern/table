@@ -22,7 +22,7 @@ PHP 5.4 or higher.
 ## Installation
 
 Include jupitern/table in your project, by adding it to your composer.json file.
-```javascript
+```php
 {
     "require": {
         "jupitern/table": "1.*"
