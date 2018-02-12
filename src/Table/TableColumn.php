@@ -115,6 +115,10 @@ Class TableColumn
 	 */
 	public function renderHeader()
 	{
+		if ($this->title === false) {
+			return "";
+		}
+		
 		if (empty($this->title) && !is_callable($this->value)) {
 			if ($this->tableInstance->titlesMode == 'underscore') $this->title = $this->underscoreToTitle($this->value);
 			elseif ($this->tableInstance->titlesMode == 'camelcase') $this->title = $this->camelToTitle($this->value);
