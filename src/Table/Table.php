@@ -7,10 +7,11 @@ class Table
 	public $columns;
 	public $hasFilters;
 
-	private $data;
-	private $css;
-	private $attrs;
-	private $tablePlugin;
+	protected $data;
+	protected $css;
+	protected $attrs;
+	protected $rowAttrs;
+	protected $tablePlugin;
 	public $titlesMode = null;
 
 
@@ -18,6 +19,7 @@ class Table
 	{
 		$this->css = new Properties();
 		$this->attrs = new Properties();
+		$this->rowAttrs = new Properties();
 		$this->hasFilters = false;
 	}
 
@@ -85,6 +87,31 @@ class Table
 	}
 
 	/**
+	 * add html table row attribute
+	 *
+	 * @param $attr
+	 * @param $value
+	 * @return $this
+	 */
+	public function rowAttr($attr, $value)
+	{
+		$this->rowAttrs->add($attr, $value);
+		return $this;
+	}
+
+	/**
+	 * add html table row attributes
+	 *
+	 * @param $attrs
+	 * @return $this
+	 */
+	public function rowAttrs($attrs)
+	{
+		$this->rowAttrs->addAll($attrs);
+		return $this;
+	}
+
+	/**
 	 * add html table style
 	 *
 	 * @param $attr
@@ -131,14 +158,17 @@ class Table
 			$theadFilters .= $column->renderFilter();
 		}
 
+		$rowTemplate = "<tr {attrs}>{cells}</tr>\n";
+
 		$tbody = '';
 		if (count($this->data)) {
 			foreach ($this->data as $row) {
-				$tbody .= '<tr>';
+				$cells = '';
 				foreach ((array)$this->columns as $column) {
-					$tbody .= $column->renderBody($row);
+					$cells .= $column->renderBody($row);
 				}
-				$tbody .= '</tr>';
+				$rowAttrs = $this->rowAttrs->render("{prop}='{val}' ", $row);
+				$tbody .= str_replace(['{attrs}','{cells}'], [$rowAttrs, $cells], $rowTemplate);
 			}
 		}
 
@@ -153,7 +183,7 @@ class Table
 			],
 			$html
 		);
-		
+
 		if (!$returnOutput) echo $output;
 		return $output;
 	}

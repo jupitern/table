@@ -19,13 +19,25 @@ class Properties
 		return $this;
 	}
 
-	public function render($template)
+	public function render($template, $context = null)
 	{
 		$output = '';
 		foreach ((array)$this->properties as $prop => $val) {
+			$val = $this->getValue($val, $context);
 			$output .= str_replace(['{prop}', '{val}'], [$prop, $val], $template);
 		}
 		return $output;
+	}
+
+	public function getValue($value, $context)
+	{
+		$val = "";
+		if (is_callable($value)) {
+			$val = $value($context);
+		} else {
+			$val = $value;
+		}
+		return $val;
 	}
 
 }

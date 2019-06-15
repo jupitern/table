@@ -118,7 +118,7 @@ Class TableColumn
 		if ($this->title === false) {
 			return "";
 		}
-		
+
 		if (empty($this->title) && !is_callable($this->value)) {
 			if ($this->tableInstance->titlesMode == 'underscore') $this->title = $this->underscoreToTitle($this->value);
 			elseif ($this->tableInstance->titlesMode == 'camelcase') $this->title = $this->camelToTitle($this->value);
@@ -166,8 +166,8 @@ Class TableColumn
 	public function renderBody( &$row )
 	{
 		$template = '<td {attrs} style="{css}">{val}</td>';
-		$attrs = $this->attrs['body']->render('{prop}="{val}" ');
-		$css = $this->css['body']->render('{prop}:{val}; ');
+		$attrs = $this->attrs['body']->render('{prop}="{val}" ', $row);
+		$css = $this->css['body']->render('{prop}:{val}; ', $row);
 
 		$val = "";
 		if (is_callable($this->value)) {

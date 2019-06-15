@@ -14,6 +14,12 @@ $table = \Jupitern\Table\Table::instance()
 	->attr('class', 'table table-bordered table-striped table-hover')
 	->attr('cellspacing', '0')
 	->attr('width', '100%')
+	->rowAttr('class', function($row) {
+		return $row['age'] > 40 ? 'info' : '';
+	})
+	->rowAttr('data-id', function ($row) {
+		return 'row-' . $row['id'];
+	})
 	->column()
 		->title('Name')
 		->value(function ($row) {
@@ -28,6 +34,12 @@ $table = \Jupitern\Table\Table::instance()
 		->value('age')
 		->css('color', 'red')
 		->css('width', '20%')
+		->attr('data-age', function($row) {
+			return $row['age'];
+		})
+		->css('color', function($row) {
+			return $row['age'] > 40 ? '#00f' : 'inherit';
+		})
 	->add()
 	->column('Phone')
 		->value('phone')
