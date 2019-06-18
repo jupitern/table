@@ -15,6 +15,9 @@ $table = \Jupitern\Table\Table::instance()
 	->attr('table', 'cellspacing', '0')
 	->attr('table', 'width', '100%')
     ->attr('tr', 'data-text', 'bla bla bla bla bla')
+    ->attr('tr', 'data-id', function($row) {
+    	return 'row-' . $row['id'];
+    })
     ->css('tr', 'background-color', 'red')
 	->column()
 		->title('Name')
