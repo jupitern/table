@@ -16,7 +16,8 @@
         "issues": "https://github.com/jupitern/table/issues"
     },
     "require"    :{
-        "php":">=5.4"
+        "php": ">=5.6",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {

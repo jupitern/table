@@ -6,18 +6,19 @@ class Table
 
 	public $columns;
 	public $hasFilters;
+    public $titlesMode = null;
 
-	private $data;
-	private $css;
-	private $attrs;
-	private $tablePlugin;
-	public $titlesMode = null;
+    protected $data;
+    protected $css = [];
+    protected $attrs = [];
 
 
 	protected function __construct()
 	{
-		$this->css = new Properties();
-		$this->attrs = new Properties();
+		$this->css['table'] = new Properties();
+		$this->css['tr'] = new Properties();
+		$this->attrs['table'] = new Properties();
+		$this->attrs['tr'] = new Properties();
 		$this->hasFilters = false;
 	}
 
@@ -40,15 +41,17 @@ class Table
 	public function setData($data)
 	{
 		$this->data = $this->isJson($data) ? json_decode($data) : $data;
+
 		return $this;
 	}
 
-	/**
-	 * set titles auto resolution mode from column name. Options: underscore, camelcase
-	 *
-	 * @param $data
-	 * @return $this
-	 */
+    /**
+     * set titles auto resolution mode from column name. Options: underscore, camelcase
+     *
+     * @param $titleMode
+     * @return $this
+     * @throws \Exception
+     */
 	public function setAutoTitles($titleMode)
 	{
 		if (!in_array(strtolower($titleMode), ['camelcase', 'underscore'])) {
@@ -56,44 +59,51 @@ class Table
 		}
 
 		$this->titlesMode = strtolower($titleMode);
+
 		return $this;
 	}
 
 	/**
 	 * add html table attribute
 	 *
+	 * @param $elem
 	 * @param $attr
 	 * @param $value
 	 * @return $this
 	 */
-	public function attr($attr, $value)
+	public function attr($elem, $attr, $value)
 	{
-		$this->attrs->add($attr, $value);
+		$this->attrs[$elem]->add($attr, $value);
+
 		return $this;
 	}
 
 	/**
 	 * add html table attributes
 	 *
+	 * @param $elem
 	 * @param $attrs
 	 * @return $this
 	 */
-	public function attrs($attrs)
+	public function attrs($elem, $attrs)
 	{
-		$this->attrs->addAll($attrs);
+		$this->attrs[$elem]->addAll($attrs);
+
 		return $this;
 	}
 
 	/**
 	 * add html table style
 	 *
+	 * @param $elem
 	 * @param $attr
 	 * @param $value
 	 * @return $this
 	 */
-	public function css($attr, $value)
+	public function css($elem, $attr, $value)
 	{
-		$this->css->add($attr, $value);
+		$this->css[$elem]->add($attr, $value);
+
 		return $this;
 	}
 
@@ -106,6 +116,7 @@ class Table
 	{
 		$column = new TableColumn($this);
 		$this->columns[] = $column;
+
 		return $column;
 	}
 
@@ -117,12 +128,8 @@ class Table
 	 */
 	public function render($returnOutput = false)
 	{
-		$html  = '<table {attrs} {css}><thead><tr>{thead}</tr>{theadFilters}</thead>';
+		$html  = '<table {tableAttrs} {tableCss}><thead><tr>{thead}</tr>{theadFilters}</thead>';
 		$html .= '<tbody>{tbody}</tbody></table>';
-		$html .= "\n\n{plugin}";
-
-		$attrs = $this->attrs->render('{prop}="{val}" ');
-		$css = $this->css->render('{prop}:{val}; ');
 
 		$thead = '';
 		$theadFilters = '';
@@ -134,7 +141,10 @@ class Table
 		$tbody = '';
 		if (count($this->data)) {
 			foreach ($this->data as $row) {
-				$tbody .= '<tr>';
+				$tbody .= '<tr ';
+                $tbody .= $this->attrs['tr']->render('{prop}="{val}" ');
+                $tbody .= 'style="'.$this->css['tr']->render('{prop}:{val}; ') .'" >';
+
 				foreach ((array)$this->columns as $column) {
 					$tbody .= $column->renderBody($row);
 				}
@@ -142,19 +152,20 @@ class Table
 			}
 		}
 
-		$plugin = $this->tablePlugin !== null ? $this->tablePlugin->render() : '';
-
 		$output = str_replace(
-			['{attrs}','{css}','{thead}','{theadFilters}','{tbody}', '{plugin}'],
+			['{tableAttrs}','{tableCss}','{thead}','{theadFilters}','{tbody}'],
 			[
-				$attrs, $css, $thead,
+                $this->attrs['table']->render('{prop}="{val}" '),
+                $this->css['table']->render('{prop}:{val}; '),
+                $thead,
 				$this->hasFilters ? "<tr>{$theadFilters}</tr>" : "",
-				$tbody, $plugin
+				$tbody
 			],
 			$html
 		);
 		
 		if (!$returnOutput) echo $output;
+
 		return $output;
 	}
 
@@ -163,6 +174,7 @@ class Table
 	{
 		if (!is_string($string)) return false;
 		json_decode($string);
+
 		return (json_last_error() == JSON_ERROR_NONE);
 	}
 
