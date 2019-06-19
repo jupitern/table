@@ -142,8 +142,8 @@ class Table
 		if (count($this->data)) {
 			foreach ($this->data as $row) {
 				$tbody .= '<tr ';
-                $tbody .= $this->attrs['tr']->render('{prop}="{val}" ');
-                $tbody .= 'style="'.$this->css['tr']->render('{prop}:{val}; ') .'" >';
+                $tbody .= $this->attrs['tr']->render('{prop}="{val}" ', $row);
+                $tbody .= 'style="'.$this->css['tr']->render('{prop}:{val}; ', $row) .'" >';
 
 				foreach ((array)$this->columns as $column) {
 					$tbody .= $column->renderBody($row);
@@ -163,7 +163,7 @@ class Table
 			],
 			$html
 		);
-		
+
 		if (!$returnOutput) echo $output;
 
 		return $output;
