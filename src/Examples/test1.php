@@ -10,6 +10,7 @@ $table = \Jupitern\Table\Table::instance()
 		['id' => 4, 'name' => 'Clark', 'age' => '34', 'phone' => '169 574 741'],
 		['id' => 5, 'name' => 'Alex', 'age' => '65', 'phone' => '732 753 467'],
 	])
+//    ->attrs('table', ['class' => 'table table-bordered', 'cellspacing' => '0'])
 	->attr('table', 'id', 'demoTable')
 	->attr('table', 'class', 'table table-bordered table-striped table-hover')
 	->attr('table', 'cellspacing', '0')

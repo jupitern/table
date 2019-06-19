@@ -17,7 +17,7 @@ soon...
 
 ## Requirements
 
-PHP 5.4 or higher.
+PHP 5.6 or higher.
 
 ## Installation
 
@@ -49,12 +49,20 @@ Include jupitern/table in your project, by adding it to your composer.json file.
 ->setData($data)
 
 // add attributes to the <table> html tag one by one
-->attr('id', 'demoTable')
-->attr('class', 'table table-bordered table-striped table-hover')
-->attr('cellspacing', '0')
+->attr('table', 'id', 'demoTable')
+->attr('table', 'class', 'table table-bordered table-striped table-hover')
+->attr('table', 'cellspacing', '0')
 
 // or add all <table> attributes at once
-->attrs(['class' => 'table table-bordered', 'cellspacing' => '0']);
+->attrs('table', ['class' => 'table table-bordered', 'cellspacing' => '0'])
+
+// add attributes to the table rows
+->css('tr', 'background-color', 'red')
+
+// add attributes to the table rows using a callable
+->attr('tr', 'data-id', function($row) {
+    return 'row-' . $row['id'];
+})
 
 // add a new column for array data
 ->column()
@@ -112,10 +120,10 @@ Include jupitern/table in your project, by adding it to your composer.json file.
 ->column()
 	->title('Name')
 	->value('name')
-	->attr('data-val', 'foo', true)				// add attributes to <th>
-    ->css('background-color', '#f5f5f5', true)	// add css to <th>
-    ->attr('data-val', 'bar')					// add attributes to <td>
-    ->css('background-color', '#f5f5f5')		// add css to <td>
+	->attr('th', 'data-val', 'foo')		        // add attributes to <th>
+    ->css('th', 'background-color', '#f5f5f5')	// add css to <th>
+    ->attr('td', 'data-val', 'bar')				// add attributes to <td>
+    ->css('td', 'background-color', '#f5f5f5')	// add css to <td>
 ->add()
 
 // echo table output
@@ -140,38 +148,38 @@ $filterData = $db->query("SELECT name as val, name FROM persons limit 10")->fetc
 
 \Jupitern\Table\Table::instance()
 	->setData($data)
-	->attr('id', 'demoTable')
-	->attr('class', 'table table-bordered table-striped table-hover')
-	->attr('cellspacing', '0')
-	->attr('width', '100%')
+	->attr('table', 'id', 'demoTable')
+	->attr('table', 'class', 'table table-bordered table-striped table-hover')
+	->attr('table', 'cellspacing', '0')
+	->attr('table', 'width', '100%')
 	->column()
 		->title('Name')
 		->value(function ($row) {
 			return rand(1,10)%2 ? '<b>'.$row->name.'</b>' : $row->name;
 		})
 		->filter($filterData)
-		->css('color', 'green')
-		->css('width', '50%')
-		->css('background-color', '#ccc', true)
+		->css('td', 'color', 'green')
+		->css('td', 'width', '50%')
+		->css('td', 'background-color', '#ccc', true)
 	->add()
 	->column()
 		->title('Age')
 		->value('age')
 		->filter()
-		->css('color', 'red')
-		->css('width', '20%')
+		->css('td', 'color', 'red')
+		->css('td', 'width', '20%')
 	->add()
 	->column('Phone')
 		->filter()
 		->value('phone')
-		->css('color', 'red')
-		->css('width', '20%')
+		->css('td', 'color', 'red')
+		->css('td', 'width', '20%')
 	->add()
 	->column()
 		->value(function ($row) {
 			return '<a href="country/'.$row->id.'">edit</a>';
 		})
-		->css('width', '10%')
+		->css('td', 'width', '10%')
 	->add()
 	->render();
 ?>
