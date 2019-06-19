@@ -20,11 +20,12 @@ Class TableColumn
 	public function __construct(Table &$tableInstance)
 	{
 		$this->tableInstance = $tableInstance;
-		$this->attrs = ['header' => new Properties(), 'body' => new Properties()];
-		$this->css = ['header' => new Properties(), 'body' => new Properties()];
+		$this->attrs = ['th' => new Properties(), 'tr' => new Properties(), 'td' => new Properties()];
+		$this->css = ['th' => new Properties(), 'tr' => new Properties(), 'td' => new Properties()];
 	}
 
-	public function __get( $prop ){
+	public function __get( $prop )
+    {
 		return $this->$prop;
 	}
 
@@ -37,6 +38,7 @@ Class TableColumn
 	public function title($title)
 	{
 		$this->title = $title;
+
 		return $this;
 	}
 
@@ -52,34 +54,37 @@ Class TableColumn
 	public function value($value)
 	{
 		$this->value = $value;
+
 		return $this;
 	}
 
 	/**
 	 * add a attribute to table <td> or <th>
 	 *
+	 * @param $elem
 	 * @param $attr
 	 * @param $value
-	 * @param bool $header
 	 * @return $this
 	 */
-	public function attr($attr, $value, $header = false)
+	public function attr($elem, $attr, $value)
 	{
-		$this->attrs[$header ? 'header' : 'body']->add($attr, $value);
+		$this->attrs[$elem]->add($attr, $value);
+
 		return $this;
 	}
 
 	/**
 	 * add css to table <td> or <th>
 	 *
+     * @param $elem
 	 * @param $attr
 	 * @param $value
-	 * @param bool $header
 	 * @return $this
 	 */
-	public function css($attr, $value, $header = false)
+	public function css($elem, $attr, $value)
 	{
-		$this->css[$header ? 'header' : 'body']->add($attr, $value);
+		$this->css[$elem]->add($attr, $value);
+
 		return $this;
 	}
 
@@ -95,6 +100,7 @@ Class TableColumn
 		$this->filterData = $this->isJson($data) ? json_decode($data) : $data;
 		$this->filter = true;
 		$this->tableInstance->hasFilters = true;
+
 		return $this;
 	}
 
@@ -125,8 +131,9 @@ Class TableColumn
 		}
 
 		$template = '<th {attrs} style="{css}">{title}</th>';
-		$attrs = $this->attrs['header']->render('{prop}="{val}" ');
-		$css = $this->css['header']->render('{prop}:{val}; ');
+		$attrs = $this->attrs['th']->render('{prop}="{val}" ');
+		$css = $this->css['th']->render('{prop}:{val}; ');
+
 		return str_replace(['{attrs}', '{css}', '{title}'], [$attrs, $css, $this->title], $template);
 	}
 
@@ -154,6 +161,7 @@ Class TableColumn
 		elseif ($this->filter) {
 			$html = '<input type="text" class="form-control input-sm"  style="width: 99%">';
 		}
+
 		return '<td>'.$html.'</td>';
 	}
 
@@ -166,8 +174,8 @@ Class TableColumn
 	public function renderBody( &$row )
 	{
 		$template = '<td {attrs} style="{css}">{val}</td>';
-		$attrs = $this->attrs['body']->render('{prop}="{val}" ');
-		$css = $this->css['body']->render('{prop}:{val}; ');
+		$attrs = $this->attrs['td']->render('{prop}="{val}" ');
+		$css = $this->css['td']->render('{prop}:{val}; ');
 
 		$val = "";
 		if (is_callable($this->value)) {
@@ -180,6 +188,7 @@ Class TableColumn
 		elseif (is_array($row)) {
 			$val = $this->value !== null ? $row[$this->value] : '';
 		}
+
 		return str_replace(['{attrs}','{css}','{title}','{val}'], [$attrs, $css, $this->title, $val], $template);
 	}
 
@@ -194,6 +203,7 @@ Class TableColumn
 	{
 		if (!is_string($string)) return false;
 		json_decode($string);
+
 		return (json_last_error() == JSON_ERROR_NONE);
 	}
 

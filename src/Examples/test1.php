@@ -10,35 +10,42 @@ $table = \Jupitern\Table\Table::instance()
 		['id' => 4, 'name' => 'Clark', 'age' => '34', 'phone' => '169 574 741'],
 		['id' => 5, 'name' => 'Alex', 'age' => '65', 'phone' => '732 753 467'],
 	])
-	->attr('id', 'demoTable')
-	->attr('class', 'table table-bordered table-striped table-hover')
-	->attr('cellspacing', '0')
-	->attr('width', '100%')
+//    ->attrs('table', ['class' => 'table table-bordered', 'cellspacing' => '0'])
+	->attr('table', 'id', 'demoTable')
+	->attr('table', 'class', 'table table-bordered table-striped table-hover')
+	->attr('table', 'cellspacing', '0')
+	->attr('table', 'width', '100%')
+    ->attr('tr', 'data-text', 'bla bla bla bla bla')
+    ->attr('tr', 'data-id', function($row) {
+    	return 'row-' . $row['id'];
+    })
+    ->css('tr', 'background-color', 'red')
 	->column()
 		->title('Name')
 		->value(function ($row) {
 			return rand(1,10)%2 ? '<b>'.$row['name'].'</b>' : $row['name'];
 		})
-		->css('color', 'green')
-		->css('width', '50%')
-		->css('background-color', '#ccc', true)
+		->attr('td', 'data-text', 'bla bla bla')
+		->css('th', 'color', 'green')
+		->css('td', 'width', '50%')
+		->css('td', 'background-color', '#ccc', true)
 	->add()
 	->column()
 		->title('Age')
 		->value('age')
-		->css('color', 'red')
-		->css('width', '20%')
+		->css('th', 'color', 'red')
+		->css('td', 'width', '20%')
 	->add()
 	->column('Phone')
 		->value('phone')
-		->css('color', 'red')
-		->css('width', '20%')
+		->css('td', 'color', 'red')
+		->css('td', 'width', '20%')
 	->add()
 	->column()
 		->value(function ($row) {
 			return '<a href="country/'. $row['id'] .'">edit</a>';
 		})
-		->css('width', '10%')
+		->css('td', 'width', '10%')
 	->add();
 ?>
 
