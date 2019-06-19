@@ -25,7 +25,7 @@ $filterData = $db->query("SELECT name as val, name FROM persons limit 10")->fetc
 		->filter($filterData)
 		->css('td', 'color', 'green')
 		->css('td', 'width', '50%')
-		->css('td', 'background-color', '#ccc', true)
+		->css('td', 'background-color', '#ccc')
 	->add()
 	->column()
 		->title('Age')

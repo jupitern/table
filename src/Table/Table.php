@@ -40,7 +40,7 @@ class Table
 	 */
 	public function setData($data)
 	{
-		$this->data = $this->isJson($data) ? json_decode($data) : $data;
+		$this->data = self::isJson($data) ? json_decode($data) : $data;
 
 		return $this;
 	}
@@ -170,7 +170,7 @@ class Table
 	}
 
 
-	private function isJson($string)
+	public static function isJson($string)
 	{
 		if (!is_string($string)) return false;
 		json_decode($string);

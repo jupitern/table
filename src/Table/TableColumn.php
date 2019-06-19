@@ -97,7 +97,7 @@ Class TableColumn
 	 */
 	public function filter($data = null)
 	{
-		$this->filterData = $this->isJson($data) ? json_decode($data) : $data;
+		$this->filterData = Table::isJson($data) ? json_decode($data) : $data;
 		$this->filter = true;
 		$this->tableInstance->hasFilters = true;
 
@@ -190,21 +190,6 @@ Class TableColumn
 		}
 
 		return str_replace(['{attrs}','{css}','{title}','{val}'], [$attrs, $css, $this->title, $val], $template);
-	}
-
-
-	/**
-	 * Check if string if json
-	 *
-	 * @param $string
-	 * @return bool
-	 */
-	private function isJson($string)
-	{
-		if (!is_string($string)) return false;
-		json_decode($string);
-
-		return (json_last_error() == JSON_ERROR_NONE);
 	}
 
 
