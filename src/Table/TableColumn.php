@@ -129,7 +129,7 @@ Class TableColumn
 			return "";
 		}
 		
-		if (empty($this->title) && !is_callable($this->value)) {
+		if (empty($this->title) && !$this->isCallable($this->value)) {
 			if ($this->tableInstance->titlesMode == 'underscore') $this->title = $this->underscoreToTitle($this->value);
 			elseif ($this->tableInstance->titlesMode == 'camelcase') $this->title = $this->camelToTitle($this->value);
 		}
@@ -182,7 +182,7 @@ Class TableColumn
 		$css = $this->css['td']->render('{prop}:{val}; ');
 
 		$val = "";
-		if (is_callable($this->value)) {
+		if ($this->isCallable($this->value)) {
 			$val = $this->value;
 			$val = $val($row);
 		}
@@ -220,6 +220,15 @@ Class TableColumn
 
 		return $str;
 	}
-
-
+    
+    
+    /**
+     * @param string $var
+     * @return boolean
+     */
+    private function isCallable($var)
+    {
+        return (!is_string($var) && is_callable($var)) || (is_object($var) && $var instanceof \Closure);
+    }
+	
 }
