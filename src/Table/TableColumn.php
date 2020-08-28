@@ -68,6 +68,10 @@ Class TableColumn
 	 */
 	public function attr($elem, $attr, $value)
 	{
+	    if (!in_array($elem, $this->attrs)) {
+	        throw new \Exception("element not available in column scope");
+        }
+
 		$this->attrs[$elem]->add($attr, $value);
 
 		return $this;
