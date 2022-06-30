@@ -1,30 +1,32 @@
 <?php
+
 namespace Jupitern\Table;
+use JetBrains\PhpStorm\Pure;
 
 Class TableColumn
 {
-	public $value;
+	public mixed $value;
 
-	private $tableInstance;
-	private $title;
-	private $attrs;
-	private $css;
-	private $filter = false;
-	private $filterData = null;
+	private Table $tableInstance;
+	private string $title = "";
+	private array $attrs;
+	private array $css;
+	private bool $filter = false;
+	private mixed $filterData = null;
 
 	/**
 	 * create a new TableColumn instance
 	 *
 	 * @param Table $tableInstance
 	 */
-	public function __construct(Table &$tableInstance)
+	#[Pure] public function __construct(Table &$tableInstance)
 	{
 		$this->tableInstance = $tableInstance;
 		$this->attrs = ['th' => new Properties(), 'tr' => new Properties(), 'td' => new Properties()];
 		$this->css = ['th' => new Properties(), 'tr' => new Properties(), 'td' => new Properties()];
 	}
 
-	public function __get( $prop )
+	public function __get(mixed $prop)
     {
 		return $this->$prop;
 	}
@@ -32,42 +34,43 @@ Class TableColumn
 	/**
 	 * set column title
 	 *
-	 * @param $title
+	 * @param string $title
 	 * @return $this
 	 */
-	public function title($title)
-	{
+	public function title(string $title): static
+    {
 		$this->title = $title;
 
 		return $this;
 	}
 
 	/**
-	 * bind colunm value. $value can be:
+	 * bind column value. $value can be:
 	 * integer index for none associative array or json
 	 * string index for associative array, json, PDO or ORM result
 	 * a closure that returns a string
 	 *
-	 * @param $value
+	 * @param mixed $value
 	 * @return $this
 	 */
-	public function value($value)
-	{
+	public function value(mixed $value): static
+    {
 		$this->value = $value;
 
 		return $this;
 	}
 
-	/**
-	 * add a attribute to table <td> or <th>
-	 *
-	 * @param $elem
-	 * @param $attr
-	 * @param $value
-	 * @return $this
-	 */
-	public function attr($elem, $attr, $value)
-	{
+    /**
+     * add attribute to table <td> or <th>
+     *
+     * @param string $elem
+     * @param string $attr
+     * @param mixed $value
+     * @return $this
+     * @throws \Exception
+     */
+	public function attr(string $elem, string $attr, mixed $value): static
+    {
 	    if (!in_array($elem, array_keys($this->attrs))) {
 	        throw new \Exception("element {$elem} not available in column scope");
         }
@@ -80,13 +83,13 @@ Class TableColumn
 	/**
 	 * add css to table <td> or <th>
 	 *
-     * @param $elem
-	 * @param $attr
-	 * @param $value
+     * @param string $elem
+	 * @param string $attr
+	 * @param mixed $value
 	 * @return $this
 	 */
-	public function css($elem, $attr, $value)
-	{
+	public function css(string $elem, mixed $attr, mixed $value): static
+    {
 		$this->css[$elem]->add($attr, $value);
 
 		return $this;
@@ -99,8 +102,8 @@ Class TableColumn
 	 * @param null $data
 	 * @return $this
 	 */
-	public function filter($data = null)
-	{
+	public function filter(mixed $data = null): static
+    {
 		$this->filterData = Table::isJson($data) ? json_decode($data) : $data;
 		$this->filter = true;
 		$this->tableInstance->hasFilters = true;
@@ -113,23 +116,19 @@ Class TableColumn
 	 *
 	 * @return Table
 	 */
-	public function add()
-	{
+	public function add(): Table
+    {
 		return $this->tableInstance;
 	}
 
 	/**
 	 * render column header cell <th>
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	public function renderHeader()
-	{
-		if ($this->title === false) {
-			return "";
-		}
-		
-		if (empty($this->title) && !$this->isCallable($this->value)) {
+	public function renderHeader(): string
+    {
+		if (!$this->isCallable($this->value)) {
 			if ($this->tableInstance->titlesMode == 'underscore') $this->title = $this->underscoreToTitle($this->value);
 			elseif ($this->tableInstance->titlesMode == 'camelcase') $this->title = $this->camelToTitle($this->value);
 		}
@@ -146,7 +145,7 @@ Class TableColumn
 	 *
 	 * @return string
 	 */
-	public function renderFilter()
+	public function renderFilter(): string
 	{
 		$html = '';
 		if ($this->filterData !== null) {
@@ -173,9 +172,9 @@ Class TableColumn
 	 * render column body cell <td>
 	 *
 	 * @param $row
-	 * @return mixed
+	 * @return string
 	 */
-	public function renderBody( &$row )
+	public function renderBody(&$row): string
 	{
 		$template = '<td {attrs} style="{css}">{val}</td>';
 		$attrs = $this->attrs['td']->render('{prop}="{val}" ');
@@ -199,14 +198,13 @@ Class TableColumn
 
 	/**
 	 * @param string $str
-	 * @return mixed
-	 */
-	private function camelToTitle($str)
-	{
+	 * @return string|array|null
+     */
+	private function camelToTitle(string $str): string|array|null
+    {
 		$intermediate = preg_replace('/(?!^)([[:upper:]][[:lower:]]+)/', ' $0', $str);
-		$titleStr = preg_replace('/(?!^)([[:lower:]])([[:upper:]])/', '$1 $2', $intermediate);
 
-		return $titleStr;
+        return preg_replace('/(?!^)([[:lower:]])([[:upper:]])/', '$1 $2', $intermediate);
 	}
 
 
@@ -214,21 +212,19 @@ Class TableColumn
 	 * @param string $str
 	 * @return string
 	 */
-	private function underscoreToTitle($str)
-	{
-		$str = ucwords(str_replace("_", " ", $str));
-
-		return $str;
+	private function underscoreToTitle(string $str): string
+    {
+        return ucwords(str_replace("_", " ", $str));
 	}
     
     
     /**
-     * @param string $var
+     * @param mixed $var
      * @return boolean
      */
-    private function isCallable($var)
+    private function isCallable(mixed $var): bool
     {
-        return (!is_string($var) && is_callable($var)) || (is_object($var) && $var instanceof \Closure);
+        return (!is_string($var) && is_callable($var)) || ($var instanceof \Closure);
     }
 	
 }

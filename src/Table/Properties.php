@@ -1,42 +1,41 @@
 <?php
+
 namespace Jupitern\Table;
 
 class Properties
 {
-	private $properties;
+	private array $properties = [];
 
     /**
-     * @param $property
-     * @param $value
+     * @param string $property
+     * @param mixed $value
      * @return $this
      */
-    public function add($property, $value)
-	{
+    public function add(string $property, mixed $value): static
+    {
 		$this->properties[$property] = $value;
 
 		return $this;
 	}
 
     /**
-     * @param $properties
+     * @param array $properties
      * @return $this
      */
-    public function addAll($properties)
-	{
-		if (is_array($properties)) {
-			$this->properties = array_merge((array)$this->properties, $properties);
-		}
+    public function addAll(array $properties): static
+    {
+		$this->properties = array_merge((array)$this->properties, $properties);
 
 		return $this;
 	}
 
     /**
-     * @param $elem
-     * @param $template
+     * @param string $template
+     * @param null $context
      * @return string
      */
-    public function render($template, $context = null)
-	{
+    public function render(string $template, $context = null): string
+    {
 		$output = '';
 		foreach ((array)$this->properties as $prop => $value) {
 			if (is_callable($value)) {

@@ -17,7 +17,7 @@ soon...
 
 ## Requirements
 
-PHP 5.6 or higher.
+PHP 8.0 or higher.
 
 ## Installation
 
@@ -25,7 +25,7 @@ Include jupitern/table in your project, by adding it to your composer.json file.
 ```php
 {
     "require": {
-        "jupitern/table": "1.*"
+        "jupitern/table": "3.*"
     }
 }
 ```
@@ -70,7 +70,7 @@ Include jupitern/table in your project, by adding it to your composer.json file.
 	->value(1)
 ->add()
 
-// add a new column for (associtive array, PDO or ORM) data
+// add a new column for (associative array, PDO or ORM) data
 ->column()
 	->title('Age')
 	->value('age')
@@ -85,7 +85,7 @@ Include jupitern/table in your project, by adding it to your composer.json file.
 	})
 ->add()
 
-// onether closure example for adding a column with edit action with no title on <th>
+// another closure example for adding a column with edit action with no title on <th>
 // this example assumes data associative array
 ->column()
 	->value(function ($row) {
@@ -169,7 +169,8 @@ $filterData = $db->query("SELECT name as val, name FROM persons limit 10")->fetc
 		->css('td', 'color', 'red')
 		->css('td', 'width', '20%')
 	->add()
-	->column('Phone')
+	->column()
+	    ->title('Phone')
 		->filter()
 		->value('phone')
 		->css('td', 'color', 'red')
@@ -187,23 +188,24 @@ $filterData = $db->query("SELECT name as val, name FROM persons limit 10")->fetc
 Include Jquery, Datatables and Bootstrap (optional) in your html.
 
 <!-- JQUERY -->
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script
+    src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+    integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+    crossorigin="anonymous"></script>
 
 <!-- DATATABLES -->
-<link href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet">
-<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<link href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 
 <!-- Bootstrap and Datatables Bootstrap theme (OPTIONAL) -->
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+        
 <script type="text/javascript">
-
-	$(document).ready(function(){
-		$('#demoTable').DataTable();
-	});
-
+    $(document).ready( function () {
+        $('#demoTable').DataTable();
+    });
 </script>
 
 ```

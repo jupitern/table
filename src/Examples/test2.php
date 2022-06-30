@@ -1,6 +1,9 @@
 <?php
 
-require '../../vendor/autoload.php';
+require '../Table/Properties.php';
+require '../Table/TableColumn.php';
+require '../Table/Table.php';
+
 
 // grab data from db with PDO or in alternative from your framework ORM
 $db = new PDO('mysql:host=HOST_NAME;dbname=DB_NAME;charset=utf8', 'DB_USERNAME', 'DB_PASSWORD',
