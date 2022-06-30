@@ -1,6 +1,8 @@
 <?php
 
-require '../../vendor/autoload.php';
+require '../Table/Properties.php';
+require '../Table/TableColumn.php';
+require '../Table/Table.php';
 
 $table = \Jupitern\Table\Table::instance()
 	->setData([
@@ -19,7 +21,7 @@ $table = \Jupitern\Table\Table::instance()
     ->attr('tr', 'data-id', function($row) {
     	return 'row-' . $row['id'];
     })
-    ->css('tr', 'background-color', 'red')
+    ->css('tr', 'background-color', '#aaa')
 	->column()
 		->title('Name')
 		->value(function ($row) {
@@ -36,7 +38,7 @@ $table = \Jupitern\Table\Table::instance()
 		->css('th', 'color', 'red')
 		->css('td', 'width', '20%')
 	->add()
-	->column('Phone')
+	->column()
 		->value('phone')
 		->css('td', 'color', 'red')
 		->css('td', 'width', '20%')
@@ -53,22 +55,26 @@ $table = \Jupitern\Table\Table::instance()
 <html>
 	<head>
 		<!-- JQUERY -->
-		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script
+                src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+                integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+                crossorigin="anonymous"></script>
 
 		<!-- DATATABLES -->
-		<link href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet">
-		<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+		<link href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
+		<script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 
-		<!-- Bootstrap and Datatables Bootstrap theme (OPTIONAL) -->
-		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-		<link href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- Bootstrap and Datatables Bootstrap theme (OPTIONAL) -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-		<script type="text/javascript">
 
-			$(document).ready(function(){
-				$('#demoTable').DataTable();
-			});
+        <script type="text/javascript">
+
+            $(document).ready( function () {
+                $('#demoTable').DataTable();
+            });
 
 		</script>
 	</head>
